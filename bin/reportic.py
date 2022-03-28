@@ -14,6 +14,16 @@ class MissingSubCommand(ValueError):
     pass
 
 
+# command list
+CMD_LIST = ["Add new task",
+            "Select KW",
+            "Delete entry",
+            "List all entries for week",
+            "Create Workreport",
+            "Configurate User",
+            "Exit the programm",
+            ]
+
 # Logging module
 DEFAULT_LOGGING_DICT = {
     'version': 1,
@@ -121,6 +131,16 @@ def check_day_evening(current_time):
     print(type(current_time))
 
 
+def cli_commands_sub_menue() -> bool:
+    cmd_list_counter = 1
+    for x in CMD_LIST:
+        print(f"{cmd_list_counter}:{x}")
+        cmd_list_counter += 1
+    return TRUE
+
+    return TRUE
+
+
 def cli_menue() -> bool:
     """Display User Interface in the Command Line"""
     log.info("Cli menue function call")
@@ -129,6 +149,7 @@ def cli_menue() -> bool:
     print(f"Good day ")
     print(f"Today is {date}")
     print(f"We have the {calendar_week} KW")
+    cli_commands_sub_menue()
     return TRUE
 
 
