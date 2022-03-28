@@ -1,13 +1,17 @@
 import argparse
-from calendar import calendar
 import logging
 from logging.config import dictConfig
 from pickle import TRUE
 import sys
-from datetime import datetime
+import datetime
+from datetime import date
 
 __version__ = "0.1.0"
 __author__ = "Eugen Maksymenko <eugen.maksymenko@gmx.net>"
+
+
+class MissingSubCommand(ValueError):
+    pass
 
 
 # Logging module
@@ -63,9 +67,6 @@ def parsecli(cliargs=None) -> argparse.Namespace:
                         action='version',
                         version='%(prog)s ' + __version__
                         )
-    parser.add_argument("DIR",
-                        help="Searches the directory for files"
-                        )
 
     args = parser.parse_args(args=cliargs)
     # Setup logging and the log level according to the "-v" option
@@ -73,6 +74,18 @@ def parsecli(cliargs=None) -> argparse.Namespace:
     log.setLevel(LOGLEVELS.get(args.verbose, logging.DEBUG))
 
     log.debug("CLI result: %s", args)
+
+    # help for the user when no subcommand was passed
+    if "func" not in args:
+        cli_menue()
+        # parser.print_help()
+        #raise MissingSubCommand("Expected subcommand")
+
+    # Setup logging and the log level according to the "-v" option
+    dictConfig(DEFAULT_LOGGING_DICT)
+    log.setLevel(LOGLEVELS.get(args.verbose, logging.DEBUG))
+    log.debug("CLI result: %s", args)
+
     return args
 
 
@@ -84,31 +97,23 @@ def main(cliargs=None) -> int:
 
     try:
         args = parsecli(cliargs)
-        cli_menue(args)
         # do some useful things here...
         # If everything was good, return without error:
-        log.info("I'm an info message")
-        log.debug("I'm a debug message.")
-        log.warning("I'm a warning message.")
-        log.error("I'm an error message.")
-        log.fatal("I'm a really fatal massage!")
         return 0
 
-    # List possible exceptions here and return error codes
-    except Exception as error:  # FIXME: add a more specific exception here!
+    except MissingSubCommand as error:
         log.fatal(error)
-        # Use whatever return code is appropriate for your specific exception
-        return 10
+        return 888
 
 
 def get_time_strings():
     """Get current time, date and KW as return values"""
     log.info("Cli get_time was executed")
-    now = datetime.now()
-    date = now.strftime("%d:%m:%Y")
-    current_time = now.strftime("%H:%M:%S")
+    today = date.today()
+    formated_date = today.strftime("%d:%m:%Y")
+    current_time = today.strftime("%H:%M:%S")
     calendar_week = datetime.date.today().isocalendar()[1]
-    return current_time, date, calendar_week,
+    return current_time, formated_date, calendar_week,
 
 
 def check_day_evening(current_time):
@@ -116,12 +121,12 @@ def check_day_evening(current_time):
     print(type(current_time))
 
 
-def cli_menue(args) -> bool:
+def cli_menue() -> bool:
     """Display User Interface in the Command Line"""
     log.info("Cli menue function call")
     current_time, date, calendar_week = get_time_strings()
 
-    print(f"Good day")
+    print(f"Good day ")
     print(f"Today is {date}")
     print(f"We have the {calendar_week} KW")
     return TRUE
