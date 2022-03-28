@@ -17,6 +17,21 @@ class MissingSubCommand(ValueError):
     pass
 
 
+class bcolors:
+    RED = '\033[31m'
+    YELLOW = '\u001b[33m'
+    GREEN = '\033[92m'
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
 # command list
 CMD_LIST = ["Add new task",
             "Select KW",
@@ -26,6 +41,7 @@ CMD_LIST = ["Add new task",
             "Configurate User",
             "Exit the programm",
             ]
+
 
 # Logging module
 DEFAULT_LOGGING_DICT = {
@@ -163,7 +179,8 @@ def cli_menue() -> bool:
     return TRUE
 
 
-def cli_menue_interface():
+def cli_menue_interface() -> bool:
+    """Loop for user interface"""
     keep_going = True
     while keep_going == True:
         menue_selector_number = input("Choose an option: ")
@@ -172,6 +189,19 @@ def cli_menue_interface():
 
             os.system('cls' if os.name == 'nt' else 'clear')
             keep_going = False
+        if menue_selector_number == "6":
+            cli_week_report()
+
+
+def cli_week_report() -> bool:
+
+    print("Weekly Report")
+    print(f"KW {datetime.date.today().isocalendar()[1]}")
+    print("Name:<PLACEHOLDER>     Team:<PLACEHOLDER>")
+
+    print(f"{bcolors.RED}RED:{bcolors.ENDC}")
+    print(f"{bcolors.GREEN}Amber:{bcolors.ENDC}")
+    print(f"{bcolors.YELLOW}GREEN:{bcolors.ENDC}")
 
 
 if __name__ == "__main__":
