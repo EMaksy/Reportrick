@@ -1,10 +1,12 @@
 import argparse
+from ast import If
 import logging
 from logging.config import dictConfig
 from pickle import TRUE
 import sys
 import datetime
 from datetime import date
+import time
 
 __version__ = "0.1.0"
 __author__ = "Eugen Maksymenko <eugen.maksymenko@gmx.net>"
@@ -121,23 +123,26 @@ def get_time_strings():
     log.info("Cli get_time was executed")
     today = date.today()
     formated_date = today.strftime("%d:%m:%Y")
-    current_time = today.strftime("%H:%M:%S")
+    current_time = time.localtime()
     calendar_week = datetime.date.today().isocalendar()[1]
     return current_time, formated_date, calendar_week,
 
 
-def check_day_evening(current_time):
+def check_day_evening(current_time_obj):
+    """Function for checking if its day or evening"""
     log.info("Cli check_day_evening was executed")
-    print(type(current_time))
+    if current_time_obj.tm_hour >= 17:
+        return "evening"
+    else:
+        return "day"
 
 
 def cli_commands_sub_menue() -> bool:
+    """Numbers and outputs elements of all CMDS Strigs"""
     cmd_list_counter = 1
     for x in CMD_LIST:
         print(f"{cmd_list_counter}:{x}")
         cmd_list_counter += 1
-    return TRUE
-
     return TRUE
 
 
@@ -146,7 +151,8 @@ def cli_menue() -> bool:
     log.info("Cli menue function call")
     current_time, date, calendar_week = get_time_strings()
 
-    print(f"Good day ")
+    # check if its day or evening
+    print(f"Good {check_day_evening(current_time)}")
     print(f"Today is {date}")
     print(f"We have the {calendar_week} KW")
     cli_commands_sub_menue()
