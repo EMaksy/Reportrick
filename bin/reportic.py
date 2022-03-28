@@ -7,6 +7,7 @@ import sys
 import datetime
 from datetime import date
 import time
+import os
 
 __version__ = "0.1.0"
 __author__ = "Eugen Maksymenko <eugen.maksymenko@gmx.net>"
@@ -89,9 +90,10 @@ def parsecli(cliargs=None) -> argparse.Namespace:
 
     # help for the user when no subcommand was passed
     if "func" not in args:
+
         cli_menue()
-        # parser.print_help()
-        #raise MissingSubCommand("Expected subcommand")
+    # parser.print_help()
+    # raise MissingSubCommand("Expected subcommand")
 
     # Setup logging and the log level according to the "-v" option
     dictConfig(DEFAULT_LOGGING_DICT)
@@ -156,7 +158,20 @@ def cli_menue() -> bool:
     print(f"Today is {date}")
     print(f"We have the {calendar_week} KW")
     cli_commands_sub_menue()
+    # run user input looop
+    cli_menue_interface()
     return TRUE
+
+
+def cli_menue_interface():
+    keep_going = True
+    while keep_going == True:
+        menue_selector_number = input("Choose an option: ")
+        # exit programm
+        if menue_selector_number == "7":
+
+            os.system('cls' if os.name == 'nt' else 'clear')
+            keep_going = False
 
 
 if __name__ == "__main__":
