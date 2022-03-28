@@ -1,8 +1,10 @@
 import argparse
+from calendar import calendar
 import logging
 from logging.config import dictConfig
+from pickle import TRUE
 import sys
-
+from datetime import datetime
 
 __version__ = "0.1.0"
 __author__ = "Eugen Maksymenko <eugen.maksymenko@gmx.net>"
@@ -79,8 +81,10 @@ def main(cliargs=None) -> int:
     :param cliargs: Arguments to parse or None (=use :class:`sys.argv`)
     :return: error code
     """
+
     try:
         args = parsecli(cliargs)
+        cli_menue(args)
         # do some useful things here...
         # If everything was good, return without error:
         log.info("I'm an info message")
@@ -95,6 +99,32 @@ def main(cliargs=None) -> int:
         log.fatal(error)
         # Use whatever return code is appropriate for your specific exception
         return 10
+
+
+def get_time_strings():
+    """Get current time, date and KW as return values"""
+    log.info("Cli get_time was executed")
+    now = datetime.now()
+    date = now.strftime("%d:%m:%Y")
+    current_time = now.strftime("%H:%M:%S")
+    calendar_week = datetime.date.today().isocalendar()[1]
+    return current_time, date, calendar_week,
+
+
+def check_day_evening(current_time):
+    log.info("Cli check_day_evening was executed")
+    print(type(current_time))
+
+
+def cli_menue(args) -> bool:
+    """Display User Interface in the Command Line"""
+    log.info("Cli menue function call")
+    current_time, date, calendar_week = get_time_strings()
+
+    print(f"Good day")
+    print(f"Today is {date}")
+    print(f"We have the {calendar_week} KW")
+    return TRUE
 
 
 if __name__ == "__main__":
