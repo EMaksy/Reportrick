@@ -18,6 +18,7 @@ class MissingSubCommand(ValueError):
 
 
 class bcolors:
+    """Colors for Terminal output"""
     RED = '\033[31m'
     YELLOW = '\u001b[33m'
     GREEN = '\033[92m'
@@ -138,7 +139,7 @@ def main(cliargs=None) -> int:
 
 def get_time_strings():
     """Get current time, date and KW as return values"""
-    log.info("Cli get_time was executed")
+    log.debug("get_time_strings() was executed")
     today = date.today()
     formated_date = today.strftime("%d:%m:%Y")
     current_time = time.localtime()
@@ -148,7 +149,7 @@ def get_time_strings():
 
 def check_day_evening(current_time_obj):
     """Function for checking if its day or evening"""
-    log.info("Cli check_day_evening was executed")
+    log.debug("check_day_evening was executed")
     if current_time_obj.tm_hour >= 17:
         return "evening"
     else:
@@ -157,6 +158,7 @@ def check_day_evening(current_time_obj):
 
 def cli_commands_sub_menue() -> bool:
     """Numbers and outputs elements of all CMDS Strigs"""
+    log.debug("cli_commands_sub_menue was executed")
     cmd_list_counter = 1
     for x in CMD_LIST:
         print(f"{cmd_list_counter}:{x}")
@@ -166,7 +168,7 @@ def cli_commands_sub_menue() -> bool:
 
 def cli_menue() -> bool:
     """Display User Interface in the Command Line"""
-    log.info("Cli menue function call")
+    log.debug("cli_menue() was executed")
     current_time, date, calendar_week = get_time_strings()
     # check if its day or evening
     print(f"Good {check_day_evening(current_time)}")
@@ -178,8 +180,9 @@ def cli_menue() -> bool:
     return TRUE
 
 
-def cli_menue_interface() -> bool:
+def cli_menue_interface():
     """Loop for user interface"""
+    log.debug("cli_menue_interface() was executed")
     keep_going = True
     while keep_going == True:
         menue_selector_number = input("Choose an option: ")
@@ -192,8 +195,9 @@ def cli_menue_interface() -> bool:
             cli_week_report()
 
 
-def cli_week_report() -> bool:
+def cli_week_report():
     # clean console
+    log.debug("cli_week_report() was executed")
     clean_console()
     print("Weekly Report")
     print(f"KW {datetime.date.today().isocalendar()[1]}")
@@ -207,21 +211,24 @@ def cli_week_report() -> bool:
         return_to_main_menue = input(
             "Enter 'b' to return to main menue or press 'e' to exit  ")
         if return_to_main_menue == "b":
+            # clean and return to main menue
             cli_return_to_cli_menue()
             break
         if return_to_main_menue == "e":
+            # clean and end programm
             clean_console()
             quit()
-            break
 
 
 def clean_console():
     """OS cleans the console window"""
+    log.debug("clean_console() was executed")
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
 def cli_return_to_cli_menue():
     """Return you to the main menue"""
+    log.debug("cli_return_to_cli_menue() was executed")
     clean_console()
     cli_menue()
 
