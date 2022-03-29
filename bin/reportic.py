@@ -168,7 +168,6 @@ def cli_menue() -> bool:
     """Display User Interface in the Command Line"""
     log.info("Cli menue function call")
     current_time, date, calendar_week = get_time_strings()
-
     # check if its day or evening
     print(f"Good {check_day_evening(current_time)}")
     print(f"Today is {date}")
@@ -184,24 +183,47 @@ def cli_menue_interface() -> bool:
     keep_going = True
     while keep_going == True:
         menue_selector_number = input("Choose an option: ")
-        # exit programm
         if menue_selector_number == "7":
-
-            os.system('cls' if os.name == 'nt' else 'clear')
-            keep_going = False
-        if menue_selector_number == "6":
+            # exit the programm
+            clean_console()
+            quit()
+        if menue_selector_number == "4":
+            # list all week entries
             cli_week_report()
 
 
 def cli_week_report() -> bool:
-
+    # clean console
+    clean_console()
     print("Weekly Report")
     print(f"KW {datetime.date.today().isocalendar()[1]}")
     print("Name:<PLACEHOLDER>     Team:<PLACEHOLDER>")
-
     print(f"{bcolors.RED}RED:{bcolors.ENDC}")
     print(f"{bcolors.GREEN}Amber:{bcolors.ENDC}")
     print(f"{bcolors.YELLOW}GREEN:{bcolors.ENDC}")
+
+    # return back to the main menue
+    while True:
+        return_to_main_menue = input(
+            "Enter 'b' to return to main menue or press 'e' to exit  ")
+        if return_to_main_menue == "b":
+            cli_return_to_cli_menue()
+            break
+        if return_to_main_menue == "e":
+            clean_console()
+            quit()
+            break
+
+
+def clean_console():
+    """OS cleans the console window"""
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
+def cli_return_to_cli_menue():
+    """Return you to the main menue"""
+    clean_console()
+    cli_menue()
 
 
 if __name__ == "__main__":
