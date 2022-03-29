@@ -8,6 +8,8 @@ import datetime
 from datetime import date
 import time
 import os
+import reportic_database_class
+
 
 __version__ = "0.1.0"
 __author__ = "Eugen Maksymenko <eugen.maksymenko@gmx.net>"
@@ -34,11 +36,11 @@ class bcolors:
 
 
 # command list
-CMD_LIST = ["Add new task",
+CMD_LIST = ["Add new Entry",
             "Select KW",
-            "Delete entry",
-            "List all entries for week",
-            "Create Workreport",
+            "Delete ",
+            "List current Workreport",
+            "Export Workreport",
             "Configurate User",
             "Exit the programm",
             ]
