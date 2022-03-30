@@ -36,7 +36,7 @@ class Database():
         """
         create_user_table = """
         CREATE TABLE IF NOT EXISTS user (
-        user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER PRIMARY KEY ,
         first_name TEXT NOT NULL,
         last_name TEXT NOT NULL,
         team_name TEXT NOT NULL
@@ -168,6 +168,40 @@ class Database():
         self._execute_sql(sql_cmd_trainee)
 
         # overwrite sql database with the changes
+
+    def set_user_table(self, first_name, last_name, team_name) -> bool:
+        # setter sql statements
+        reportic.log.debug(self, first_name, last_name, team_name)
+        sql_set_data = f"""
+        INSERT INTO
+        user (first_name, last_name, team_name)
+        VALUES
+        ("{first_name}", "{last_name}" , "{team_name}");
+        """
+        # sql executes
+        try:
+            self._execute_sql(sql_set_data)
+            reportic.log.debug("set_user_table sql worked")
+            self.close()
+            return True
+        except:
+            reportic.log.debug("set_user_table sql error")
+            self.close()
+            return False
+
+    def get_user_table(self):
+        sql_get_user_data = """
+        SELECT  first_name, last_name, team_name FROM user WHERE user_id='1';
+        """
+        values = self._execute_sql(sql_get_user_data)
+        reportic.log.debug(f"SQL DATA: {values}")
+        values = list(values)
+        try:
+            first_name, last_name, team_name = values[0][0], values[0][1], values[0][2]
+            self.close()
+        except:
+            first_name, last_name, team_name = "None", "None", "None"
+        return first_name, last_name, team_name
 
     def close(self):
         """

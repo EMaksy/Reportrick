@@ -1,5 +1,6 @@
 import argparse
 from ast import If
+
 import logging
 from logging.config import dictConfig
 from pickle import TRUE
@@ -14,10 +15,10 @@ import reportic_database_class
 __version__ = "0.1.0"
 __author__ = "Eugen Maksymenko <eugen.maksymenko@gmx.net>"
 # relative dir for the database
-absolute_path = (f"{os.path.dirname(__file__)}/..")
+relative_path_to_project = (f"{os.path.dirname(__file__)}/..")
 file_dir_database = "/database"
-absolute_file_dir = "/reportic_database.sqlite"
-DATABASEPATH = absolute_path+file_dir_database+absolute_file_dir
+relative_file = "/reportic_database.sqlite"
+DATABASEPATH = relative_path_to_project + file_dir_database+relative_file
 
 
 class MissingSubCommand(ValueError):
@@ -140,12 +141,12 @@ def create_database():
 
 
 def create_database_dir():
-    log.debug(DATABASEPATH)
+    # log.debug(DATABASEPATH)
     try:
         os.mkdir(f"../{file_dir_database}")
         log.debug(f"Directory  created at{DATABASEPATH}")
     except:
-        log.debug(f"Path was not created")
+        log.debug(f"Path {DATABASEPATH} was not created")
 
 
 def main(cliargs=None) -> int:
@@ -218,9 +219,41 @@ def cli_menue_interface():
             # exit the programm
             clean_console()
             quit()
+        if menue_selector_number == "6":
+            clean_console()
+            cli_menue_config_user()
+
         if menue_selector_number == "4":
             # list all week entries
             cli_week_report()
+
+
+def cli_menue_config_user():
+    """User input of the config name"""
+    # get current user data from database
+    sql_database = reportic_database_class.Database(DATABASEPATH)
+    first_name, last_name, team_name = reportic_database_class.Database.get_user_table(
+        sql_database)
+
+    print(f"""
+          Current first Name: {first_name}
+          Current last  Name: {last_name}
+          Current Team  Name: {team_name}
+          """)
+
+    first_name = input("Enter your first name: ")
+    last_name = input("Enter your last name: ")
+    team_name = input("Enter your Team name: ")
+    try:
+        sql_database.set_user_table(
+            first_name, last_name, team_name)
+        print("Changes have been made to the database")
+    except:
+        log.debug("""
+                cli_menue_config_user()
+                Changes have not been adopted to the database!
+                """)
+    cli_menue_return()
 
 
 def cli_week_report():
@@ -233,8 +266,10 @@ def cli_week_report():
     print(f"{bcolors.RED}RED:{bcolors.ENDC}")
     print(f"{bcolors.GREEN}Amber:{bcolors.ENDC}")
     print(f"{bcolors.YELLOW}GREEN:{bcolors.ENDC}")
+    cli_menue_return()
 
-    # return back to the main menue
+
+def cli_menue_return():
     while True:
         return_to_main_menue = input(
             "Enter 'b' to return to main menue or press 'e' to exit  ")
