@@ -10,9 +10,14 @@ import time
 import os
 import reportic_database_class
 
-
+# GLOBALS
 __version__ = "0.1.0"
 __author__ = "Eugen Maksymenko <eugen.maksymenko@gmx.net>"
+# relative dir for the database
+absolute_path = (f"{os.path.dirname(__file__)}/..")
+file_dir_database = "/database"
+absolute_file_dir = "/reportic_database.sqlite"
+DATABASEPATH = absolute_path+file_dir_database+absolute_file_dir
 
 
 class MissingSubCommand(ValueError):
@@ -109,8 +114,13 @@ def parsecli(cliargs=None) -> argparse.Namespace:
 
     # help for the user when no subcommand was passed
     if "func" not in args:
+        # create initial database
+        if os.path.exists(DATABASEPATH) != True:
+            create_database_dir()
+            create_database()
 
         cli_menue()
+
     # parser.print_help()
     # raise MissingSubCommand("Expected subcommand")
 
@@ -120,6 +130,22 @@ def parsecli(cliargs=None) -> argparse.Namespace:
     log.debug("CLI result: %s", args)
 
     return args
+
+
+def create_database():
+    log.debug("create_database()")
+    sql_data = None
+    sql_database = reportic_database_class.Database(DATABASEPATH, sql_data)
+    sql_database.close
+
+
+def create_database_dir():
+    log.debug(DATABASEPATH)
+    try:
+        os.mkdir(f"../{file_dir_database}")
+        log.debug(f"Directory  created at{DATABASEPATH}")
+    except:
+        log.debug(f"Path was not created")
 
 
 def main(cliargs=None) -> int:

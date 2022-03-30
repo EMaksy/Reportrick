@@ -1,4 +1,5 @@
 import sqlite3
+import reportic
 
 
 class Database():
@@ -21,8 +22,10 @@ class Database():
         """
         Create a database by a given path
         """
+        reportic.log.debug(f"{self.path}")
         self.connection = sqlite3.connect(f"{self.path}")
         print("Connection to database true")
+
         self._create_empty_database()
 
     def _create_empty_database(self):
@@ -31,51 +34,36 @@ class Database():
         Tables: team, trainee and entry
         :param database:  path
         """
-        create_users_table = """
-        CREATE TABLE IF NOT EXISTS team (
-        TEAM_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-        TEAM_NUMBER INTEGER NOT NULL,
-        TEAM_NAME TEXT NOT NULL,
-        TEAM_START TEXT NOT NULL,
-        TEAM_END TEXT NOT NULL
+        create_user_table = """
+        CREATE TABLE IF NOT EXISTS user (
+        user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        first_name TEXT NOT NULL,
+        last_name TEXT NOT NULL,
+        team_name TEXT NOT NULL
         );
         """
-        create_year_table = """
-        CREATE TABLE IF NOT EXISTS trainee (
-        TRAINEE_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-        NAME_TRAINEE TEXT,
-        START_YEAR TEXT,
-        GRADUATION_YEAR INTEGER,
-        DATABASE_VERSION TEXT,
-        NUMBER_OF_TEAMS TEXT INTEGER,
-        DURATION  INTEGER,
-        CREATION_DATE TEXT,
-        TEAM_ID  INTEGER,
-        FOREIGN KEY(TEAM_ID) REFERENCES team(TEAM_ID)
-        );
-        """
-        create_calender_week_table = """
-        CREATE TABLE IF NOT EXISTS entry (
-        ENTRY_ID  INTEGER PRIMARY KEY AUTOINCREMENT,
-        ENTRY_TXT TEXT NOT NULL,
-        ENTRY_DATE TEXT NOT NULL,
-        DAY_ID INTEGER,
-        FOREIGN KEY(DAY_ID) REFERENCES team(DAY_ID)
+        create_calnder_week_table = """
+        CREATE TABLE IF NOT EXISTS calender_week (
+        calender_week_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        calender_week_number INTEGER NOT NULL,
+        calender_week_date  TEXT NOT NULL,
+        user_id INTEGER,
+        FOREIGN KEY(user_id) REFERENCES user(user_id)
         );
         """
         create_entry_table = """
-        CREATE TABLE IF NOT EXISTS day (
-        DAY_ID  INTEGER PRIMARY KEY AUTOINCREMENT,
-        DAY_DATE TEXT NOT NULL,
-        DAY_FREE INTEGER,
-        TRAINEE_ID INTEGER NOT NULL,
-        FOREIGN KEY(TRAINEE_ID) REFERENCES trainee(TRAINEE_ID)
+        CREATE TABLE IF NOT EXISTS entry (
+        entry_id  INTEGER PRIMARY KEY AUTOINCREMENT,
+        entry_text TEXT NOT NULL,
+        category TEXT NOT NULL,
+        calender_week_id INTEGER,
+        FOREIGN KEY(calender_week_id) REFERENCES calender_week(callender_week_id)
         );
         """
-        # execute querys
-        self._execute_sql(create_users_table)
-        self._execute_sql(create_year_table)
-        self._execute_sql(create_calender_week_table)
+
+        # create table
+        self._execute_sql(create_user_table)
+        self._execute_sql(create_calnder_week_table)
         self._execute_sql(create_entry_table)
 
     def _execute_sql(self, sql_command):
