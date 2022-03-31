@@ -154,7 +154,7 @@ def main(cliargs=None) -> int:
     :param cliargs: Arguments to parse or None (=use :class:`sys.argv`)
     :return: error code
     """
-
+    clean_console()
     try:
         args = parsecli(cliargs)
         # do some useful things here...
@@ -245,11 +245,11 @@ def cli_menue_config_user():
     last_name = input("Enter your last name: ")
     team_name = input("Enter your Team name: ")
     try:
-        sql_database.set_user_table(
-            first_name, last_name, team_name)
+        sql_database.set_user_table(first_name, last_name, team_name)
         print("Changes have been made to the database")
-    except:
-        log.debug("""
+    except Exception as e:
+        log.debug(f"""
+                Error message: {e}
                 cli_menue_config_user()
                 Changes have not been adopted to the database!
                 """)

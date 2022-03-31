@@ -35,8 +35,8 @@ class Database():
         :param database:  path
         """
         create_user_table = """
-        CREATE TABLE IF NOT EXISTS user (
-        user_id INTEGER PRIMARY KEY ,
+        CREATE TABLE IF NOT EXISTS user(
+        user_id INTEGER PRIMARY KEY AUTOINCREMENT ,
         first_name TEXT NOT NULL,
         last_name TEXT NOT NULL,
         team_name TEXT NOT NULL
@@ -173,19 +173,26 @@ class Database():
         # setter sql statements
         reportic.log.debug(self, first_name, last_name, team_name)
         sql_set_data = f"""
-        INSERT INTO
-        user (first_name, last_name, team_name)
-        VALUES
-        ("{first_name}", "{last_name}" , "{team_name}");
+        REPLACE INTO
+        user (user_id, first_name, last_name, team_name)
+        VALUES ("1","{first_name}", "{last_name}" , "{team_name}")
         """
+        sql_set_update_data = f"""
+        UPDATE user SET first_name = {first_name} last_name = {last_name} team_name = {team_name}
+        WHERE user_id=1
+        """
+        sql_return_message = ""
         # sql executes
         try:
             self._execute_sql(sql_set_data)
-            reportic.log.debug("set_user_table sql worked")
+            # self._execute_sql(sql_set_update_data)
+            print("set_user_table sql worked")
             self.close()
             return True
         except:
-            reportic.log.debug("set_user_table sql error")
+            print(self._execute_sql(sql_set_data))
+            print("set_user_table sql error")
+            print(sql_return_message)
             self.close()
             return False
 
@@ -198,9 +205,9 @@ class Database():
         values = list(values)
         try:
             first_name, last_name, team_name = values[0][0], values[0][1], values[0][2]
-            self.close()
         except:
             first_name, last_name, team_name = "None", "None", "None"
+
         return first_name, last_name, team_name
 
     def close(self):
@@ -209,3 +216,10 @@ class Database():
         """
         print("Database closed")
         self.connection.close()
+
+    """ def open(self, databasepath):
+        if True == self.sqlite3.connect(databasepath):
+            return print("Database open")
+        else:
+            return print("Database is still closed")
+    """
