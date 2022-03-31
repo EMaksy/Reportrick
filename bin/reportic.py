@@ -170,7 +170,7 @@ def get_time_strings():
     """Get current time, date and KW as return values"""
     log.debug("get_time_strings() was executed")
     today = date.today()
-    formated_date = today.strftime("%d:%m:%Y")
+    formated_date = today.strftime("%d-%m-%Y")
     current_time = time.localtime()
     calendar_week = datetime.date.today().isocalendar()[1]
     return current_time, formated_date, calendar_week,
@@ -226,6 +226,10 @@ def cli_menue_interface():
         if menue_selector_number == "4":
             # list all week entries
             cli_week_report()
+        if menue_selector_number == "1":
+            # list all week entries
+            clean_console()
+            cli_add_entry()
 
 
 def cli_menue_config_user():
@@ -294,6 +298,39 @@ def cli_return_to_cli_menue():
     log.debug("cli_return_to_cli_menue() was executed")
     clean_console()
     cli_menue()
+
+
+def cli_add_entry():
+    """Add new entry to the current Calender Week to the database"""
+    category_list = ["GREEN", "AMBER", "RED", "MEETING"]
+    clean_console()
+    print("""
+          Add new entry to the work report
+          """)
+    entry_text = input("Add new Entry: ")
+
+    print("Choose a category")
+    category_counter = 1
+    for x in category_list:
+        print(f"{category_counter}:{category_list[category_counter-1]} ")
+        category_counter += 1
+
+    category_selector = input(
+        f"Chooose an option from 1 to {category_counter-1}  ")
+
+    category = category_list[int(category_selector)-1]
+
+    print(f"Entry: {entry_text}   Category: {category}")
+
+    # get time and kw
+    date_obj, date_formatted, calender_week = get_time_strings()
+    print(
+        f"Date1: {date_obj} Date2: {date_formatted} CalenderWeekNumber: {calender_week}")
+    # database handling
+    sql_database = reportic_database_class.Database(DATABASEPATH)
+    sql_database.set_entry(category, entry_text, calender_week, date_formatted)
+
+    cli_menue_return()
 
 
 if __name__ == "__main__":

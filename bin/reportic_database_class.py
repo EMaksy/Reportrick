@@ -42,28 +42,19 @@ class Database():
         team_name TEXT NOT NULL
         );
         """
-        create_calnder_week_table = """
-        CREATE TABLE IF NOT EXISTS calender_week (
-        calender_week_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        calender_week_number INTEGER NOT NULL,
-        calender_week_date  TEXT NOT NULL,
-        user_id INTEGER,
-        FOREIGN KEY(user_id) REFERENCES user(user_id)
-        );
-        """
         create_entry_table = """
         CREATE TABLE IF NOT EXISTS entry (
         entry_id  INTEGER PRIMARY KEY AUTOINCREMENT,
         entry_text TEXT NOT NULL,
+        date TEXT NOT NULL,
+        calender_week INTEGER NOT NULL,
         category TEXT NOT NULL,
-        calender_week_id INTEGER,
-        FOREIGN KEY(calender_week_id) REFERENCES calender_week(callender_week_id)
+        user_id INTEGER,
+        FOREIGN KEY(user_id) REFERENCES user(user_id)
         );
         """
-
         # create table
         self._execute_sql(create_user_table)
-        self._execute_sql(create_calnder_week_table)
         self._execute_sql(create_entry_table)
 
     def _execute_sql(self, sql_command):
@@ -177,10 +168,6 @@ class Database():
         user (user_id, first_name, last_name, team_name)
         VALUES ("1","{first_name}", "{last_name}" , "{team_name}")
         """
-        sql_set_update_data = f"""
-        UPDATE user SET first_name = {first_name} last_name = {last_name} team_name = {team_name}
-        WHERE user_id=1
-        """
         sql_return_message = ""
         # sql executes
         try:
@@ -217,9 +204,20 @@ class Database():
         print("Database closed")
         self.connection.close()
 
-    """ def open(self, databasepath):
-        if True == self.sqlite3.connect(databasepath):
-            return print("Database open")
-        else:
-            return print("Database is still closed")
-    """
+    def set_entry(self, category, entry_text, kw, date):
+        """Add a new entry to  database"""
+        sql_add_entry = f"""
+        INSERT INTO
+        entry(entry_text,category,calender_week,date,user_id)        
+        VALUES ("{category}","{entry_text}","{kw}","{date}","1")
+        """
+        self._execute_sql(sql_add_entry)
+        self.close()
+
+    def get_entries(calender_week, year):
+        """Returns all values from database filtered by year and calender week"""
+        sql_add_entry = f"""
+        INSERT INTO
+        entry(entry_text,category)        
+        VALUES ("{calender_week}","{year}")
+        """
