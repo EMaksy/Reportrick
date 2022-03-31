@@ -209,15 +209,25 @@ class Database():
         sql_add_entry = f"""
         INSERT INTO
         entry(entry_text,category,calender_week,date,user_id)        
-        VALUES ("{category}","{entry_text}","{kw}","{date}","1")
+        VALUES ("{entry_text}","{category}","{kw}","{date}","1")
         """
         self._execute_sql(sql_add_entry)
         self.close()
 
-    def get_entries(calender_week, year):
+    def get_entries(self, calender_week, year):
         """Returns all values from database filtered by year and calender week"""
         sql_add_entry = f"""
         INSERT INTO
         entry(entry_text,category)        
         VALUES ("{calender_week}","{year}")
         """
+
+    def get_entries_text_by_category_week_year(self, calender_week, year, category):
+        """Give a category and it will give you all the entries"""
+        sql_search = f"""
+        SELECT entry_text FROM entry WHERE STRFTIME('%Y', date)  = "{year}" AND category="{category}" AND calender_week="{calender_week}" ;
+        """
+        results = list(self._execute_sql(sql_search))
+        print(len(results))
+        self.close()
+        return results

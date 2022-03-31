@@ -43,14 +43,15 @@ class bcolors:
 
 # command list
 CMD_LIST = ["Add new Entry",
-            "Select KW",
-            "Delete ",
+            "Change Date to another KW",
+            "Delete entry in current Workreport",
             "List current Workreport",
             "Export Workreport",
             "Configurate User",
             "Exit the programm",
             ]
 
+CATEGORY_LIST = ["GREEN", "AMBER", "RED", "MEETING"]
 
 # Logging module
 DEFAULT_LOGGING_DICT = {
@@ -170,7 +171,7 @@ def get_time_strings():
     """Get current time, date and KW as return values"""
     log.debug("get_time_strings() was executed")
     today = date.today()
-    formated_date = today.strftime("%d-%m-%Y")
+    formated_date = today.strftime("%Y-%m-%d")
     current_time = time.localtime()
     calendar_week = datetime.date.today().isocalendar()[1]
     return current_time, formated_date, calendar_week,
@@ -186,7 +187,7 @@ def check_day_evening(current_time_obj):
 
 
 def cli_commands_sub_menue() -> bool:
-    """Numbers and outputs elements of all CMDS Strigs"""
+    """Numbers and outputs elements of all CMDS Strings"""
     log.debug("cli_commands_sub_menue was executed")
     cmd_list_counter = 1
     for x in CMD_LIST:
@@ -261,16 +262,21 @@ def cli_menue_config_user():
 
 
 def cli_week_report():
+    """List current workreport"""
+    sql_data = reportic_database_class.Database(DATABASEPATH)
+    first_name, last_name, team_name = sql_data.get_user_table()
+
     # clean console
     log.debug("cli_week_report() was executed")
     clean_console()
     print("Weekly Report")
     print(f"KW {datetime.date.today().isocalendar()[1]}")
-    print("Name:<PLACEHOLDER>     Team:<PLACEHOLDER>")
-    print(f"{bcolors.RED}RED:{bcolors.ENDC}")
+    print(f"Name: {first_name} {last_name}     Team: {team_name}")
+    print(f"{bcolors.RED}Red:{bcolors.ENDC}")
     print(f"{bcolors.GREEN}Amber:{bcolors.ENDC}")
-    print(f"{bcolors.YELLOW}GREEN:{bcolors.ENDC}")
-    cli_menue_return()
+    print(f"{bcolors.YELLOW}Green:{bcolors.ENDC}")
+    print(f"{bcolors.OKBLUE}Meetings:{bcolors.ENDC}")
+    cli_menue_return_workreport()
 
 
 def cli_menue_return():
@@ -281,6 +287,37 @@ def cli_menue_return():
             # clean and return to main menue
             cli_return_to_cli_menue()
             break
+        if return_to_main_menue == "e":
+            # clean and end programm
+            clean_console()
+            quit()
+
+
+def cli_menue_return_workreport():
+    while True:
+        return_to_main_menue = input(
+            """
+            Enter 'b' to return to main menue
+            Press 'e' to exit
+            Press 'd' to delete an entry
+            """)
+        if return_to_main_menue == "b":
+            # clean and return to main menue
+            cli_return_to_cli_menue()
+            break
+
+        if return_to_main_menue == "d":
+            "In which category?"
+            category = choose_category()
+            print(category)
+            year = 2022
+            kw = 13
+            sql_data = reportic_database_class.Database(DATABASEPATH)
+            print(sql_data.get_entries_text_by_category_week_year(
+                kw, year, category))
+
+            break
+
         if return_to_main_menue == "e":
             # clean and end programm
             clean_console()
@@ -300,25 +337,32 @@ def cli_return_to_cli_menue():
     cli_menue()
 
 
+def show_entries_by_category(category):
+    """Display all elements by category"""
+
+
+def choose_category():
+    print("Choose a category")
+    category_counter = 1
+    for x in CATEGORY_LIST:
+        print(f"{category_counter}:{CATEGORY_LIST[category_counter-1]} ")
+        category_counter += 1
+
+    category_selector = input(
+        f"Chooose an option from 1 to {category_counter-1}  ")
+    return CATEGORY_LIST[int(category_selector)-1]
+
+
 def cli_add_entry():
     """Add new entry to the current Calender Week to the database"""
-    category_list = ["GREEN", "AMBER", "RED", "MEETING"]
+
     clean_console()
     print("""
           Add new entry to the work report
           """)
     entry_text = input("Add new Entry: ")
 
-    print("Choose a category")
-    category_counter = 1
-    for x in category_list:
-        print(f"{category_counter}:{category_list[category_counter-1]} ")
-        category_counter += 1
-
-    category_selector = input(
-        f"Chooose an option from 1 to {category_counter-1}  ")
-
-    category = category_list[int(category_selector)-1]
+    category = choose_category()
 
     print(f"Entry: {entry_text}   Category: {category}")
 
@@ -331,6 +375,10 @@ def cli_add_entry():
     sql_database.set_entry(category, entry_text, calender_week, date_formatted)
 
     cli_menue_return()
+
+
+def cli_delete_entry_current_week():
+    """List all entries of this week  and gives the option to delete them"""
 
 
 if __name__ == "__main__":
