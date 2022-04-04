@@ -3,9 +3,6 @@ import reportic
 
 
 class Database():
-
-    VERSION = 10
-
     def __init__(self, path: str, sql_data=None):
 
         self.path = path

@@ -1,9 +1,6 @@
 import argparse
-from ast import If
-
 import logging
 from logging.config import dictConfig
-from pickle import TRUE
 import sys
 import datetime
 from datetime import date
@@ -18,7 +15,7 @@ __author__ = "Eugen Maksymenko <eugen.maksymenko@gmx.net>"
 relative_path_to_project = (f"{os.path.dirname(__file__)}/..")
 file_dir_database = "/database"
 relative_file = "/reportic_database.sqlite"
-DATABASEPATH = relative_path_to_project + file_dir_database+relative_file
+DATABASEPATH = relative_path_to_project + file_dir_database + relative_file
 
 
 class MissingSubCommand(ValueError):
@@ -193,7 +190,7 @@ def cli_commands_sub_menue() -> bool:
     for x in CMD_LIST:
         print(f"{cmd_list_counter}:{x}")
         cmd_list_counter += 1
-    return TRUE
+    return True
 
 
 def cli_menue() -> bool:
@@ -207,7 +204,7 @@ def cli_menue() -> bool:
     cli_commands_sub_menue()
     # run user input looop
     cli_menue_interface()
-    return TRUE
+    return True
 
 
 def cli_menue_interface():
