@@ -83,7 +83,7 @@ class Database():
         sql_set_data = f"""
         REPLACE INTO
         user (user_id, first_name, last_name, team_name)
-        VALUES ("1","{first_name}", "{last_name}" , "{team_name}")
+        VALUES ("1","{first_name}", "{last_name}", "{team_name}")
         """
         # sql executes
         try:
@@ -128,7 +128,6 @@ class Database():
         SELECT entry_text FROM entry WHERE STRFTIME('%Y', date)  = "{year}" AND category="GREEN" AND calender_week="{calender_week}";
         """
 
-        self.__format_list(list(self.__sql_cmd(sql_search)))
         results = list(self.__sql_cmd(sql_search))
         # self.__close()
         return results

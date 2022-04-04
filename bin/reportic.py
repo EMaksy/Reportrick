@@ -292,7 +292,11 @@ def format_list(entry_list):
     """A given list of date is formated"""
     counter = 1
     for x in entry_list:
-        print(f"{counter}:{x}")
+        string_x = str(x)
+        string_x = string_x.replace(",", "")
+        string_x = string_x.replace("('", "")
+        string_x = string_x.replace("')", "")
+        print(f"{counter}:{string_x}")
         counter += 1
 
 
