@@ -17,9 +17,9 @@ file_dir_database = "/database"
 relative_file = "/reportic_database.sqlite"
 DATABASEPATH = relative_path_to_project + file_dir_database + relative_file
 # DATE
-current_date = date.today()
-YEAR = current_date.year
-CALENDER_WEEK = datetime.date.today().isocalendar()[1]
+global YEAR, CALENDER_WEEK
+YEAR = str(date.today().year)
+CALENDER_WEEK = str(datetime.date.today().isocalendar()[1])
 
 
 class MissingSubCommand(ValueError):
@@ -216,6 +216,7 @@ def cli_menue_interface():
     """Loop for user interface"""
     log.debug("cli_menue_interface() was executed")
     keep_going = True
+    #print(YEAR, CALENDER_WEEK)
     while keep_going == True:
         menue_selector_number = input("Choose an option: ")
         if menue_selector_number == "6":
@@ -228,10 +229,24 @@ def cli_menue_interface():
         if menue_selector_number == "3":
             # list all week entries
             cli_week_report()
+        if menue_selector_number == "2":
+            clean_console()
+            cli_change_global_date()
+            cli_menue_return()
+
         if menue_selector_number == "1":
             # list all week entries
             clean_console()
             cli_add_entry()
+
+
+def cli_change_global_date():
+    """Change Dates of an workreport"""
+    YEAR = input("Enter the year for the workreport  ")
+    CALENDER_WEEK = input("Please input the CALENDER WEEK  ")
+    print(
+        f"Year was changed to {YEAR} and Calender Week was changed to {CALENDER_WEEK}")
+    print(YEAR, CALENDER_WEEK)
 
 
 def cli_menue_config__user_output():
@@ -273,6 +288,14 @@ def cli_menue_config_user():
     cli_menue_return()
 
 
+def format_list(entry_list):
+    """A given list of date is formated"""
+    counter = 1
+    for x in entry_list:
+        print(f"{counter}:{x}")
+        counter += 1
+
+
 def cli_week_report():
     """List current workreport"""
     sql_data = reportic_database_class.Database(DATABASEPATH)
@@ -283,10 +306,8 @@ def cli_week_report():
 
     list_green_entries = list(sql_data.get_entries_green_week_year(
         current_calender_week, current_year))
-
     list_red_entries = list(sql_data.get_entries_red_week_year(
         current_calender_week, current_year))
-
     list_amber_entries = list(sql_data.get_entries_amber_week_year(
         current_calender_week, current_year))
     list_meetings_enries = list(sql_data.get_entries_meeting_week_year(
@@ -299,6 +320,7 @@ def cli_week_report():
     print(f"KW {datetime.date.today().isocalendar()[1]}")
     print(f"Name: {first_name} {last_name}     Team: {team_name}")
     print(f"{bcolors.RED}Red: {list_red_entries} {bcolors.ENDC}")
+    format_list(list_red_entries)
     print(f"{bcolors.GREEN}Green: {list_green_entries} {bcolors.ENDC}")
     print(f"{bcolors.YELLOW}Amber: {list_amber_entries} {bcolors.ENDC}")
     print(f"{bcolors.OKBLUE}Meetings: {list_meetings_enries} {bcolors.ENDC}")

@@ -1,6 +1,7 @@
 import sqlite3
 import string
 import reportic
+import os
 
 
 class Database():
@@ -123,11 +124,20 @@ class Database():
         self.__sql_cmd(sql_add_entry)
         self.__close()
 
+    def __format_list(self, entry_list):
+        """A given list of date is formated"""
+        counter = 1
+        for x in entry_list:
+            print(f"{counter}:{x}")
+            counter += 1
+
     def get_entries_green_week_year(self, calender_week, year):
         """Give all entries for CATEGORY GREEN from a given calender_week and year"""
         sql_search = f"""
         SELECT entry_text FROM entry WHERE STRFTIME('%Y', date)  = "{year}" AND category="GREEN" AND calender_week="{calender_week}";
         """
+        sql_list_entry = list(self.__sql_cmd(sql_search))
+        self.__format_list(list(self.__sql_cmd(sql_search)))
         results = list(self.__sql_cmd(sql_search))
         # self.__close()
         return results
