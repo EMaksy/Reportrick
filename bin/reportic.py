@@ -16,6 +16,10 @@ relative_path_to_project = (f"{os.path.dirname(__file__)}/..")
 file_dir_database = "/database"
 relative_file = "/reportic_database.sqlite"
 DATABASEPATH = relative_path_to_project + file_dir_database + relative_file
+# DATE
+current_date = date.today()
+YEAR = current_date.year
+CALENDER_WEEK = datetime.date.today().isocalendar()[1]
 
 
 class MissingSubCommand(ValueError):
@@ -40,9 +44,8 @@ class bcolors:
 
 # command list
 CMD_LIST = ["Add new Entry",
-            "Change Date to another KW",
-            "Delete entry in current Workreport",
-            "List current Workreport",
+            "Change KW or Year",
+            "Current Workreport",
             "Export Workreport",
             "Configurate User",
             "Exit the programm",
@@ -113,7 +116,7 @@ def parsecli(cliargs=None) -> argparse.Namespace:
 
     # help for the user when no subcommand was passed
     if "func" not in args:
-        # create initial database
+        # Create directory and create the dabase if no database exists
         if os.path.exists(DATABASEPATH) != True:
             create_database_dir()
             create_database()
@@ -132,6 +135,7 @@ def parsecli(cliargs=None) -> argparse.Namespace:
 
 
 def create_database():
+    """Create empty database"""
     log.debug("create_database()")
     sql_data = None
     sql_database = reportic_database_class.Database(DATABASEPATH, sql_data)
@@ -139,12 +143,13 @@ def create_database():
 
 
 def create_database_dir():
+    """Create a relative directory for the reportic database"""
     # log.debug(DATABASEPATH)
     try:
         os.mkdir(f"../{file_dir_database}")
         log.debug(f"Directory  created at{DATABASEPATH}")
     except:
-        log.debug(f"Path {DATABASEPATH} was not created")
+        log.error(f"Path {DATABASEPATH} was not created")
 
 
 def main(cliargs=None) -> int:
@@ -213,15 +218,14 @@ def cli_menue_interface():
     keep_going = True
     while keep_going == True:
         menue_selector_number = input("Choose an option: ")
-        if menue_selector_number == "7":
+        if menue_selector_number == "6":
             # exit the programm
             clean_console()
             quit()
-        if menue_selector_number == "6":
+        if menue_selector_number == "5":
             clean_console()
             cli_menue_config_user()
-
-        if menue_selector_number == "4":
+        if menue_selector_number == "3":
             # list all week entries
             cli_week_report()
         if menue_selector_number == "1":
@@ -230,9 +234,10 @@ def cli_menue_interface():
             cli_add_entry()
 
 
-def cli_menue_config_user():
-    """User input of the config name"""
-    # get current user data from database
+def cli_menue_config__user_output():
+    """
+    Output the current first/last name and team on the console
+    """
     sql_database = reportic_database_class.Database(DATABASEPATH)
     first_name, last_name, team_name = reportic_database_class.Database.get_user_table(
         sql_database)
@@ -243,12 +248,22 @@ def cli_menue_config_user():
           Current Team  Name: {team_name}
           """)
 
+
+def cli_menue_config_user():
+    """User input of the config name"""
+    # get current user data from database
+    sql_database = reportic_database_class.Database(DATABASEPATH)
+    cli_menue_config__user_output()
+
     first_name = input("Enter your first name: ")
     last_name = input("Enter your last name: ")
     team_name = input("Enter your Team name: ")
     try:
         sql_database.set_user_table(first_name, last_name, team_name)
         print("Changes have been made to the database")
+        clean_console()
+        cli_menue_config__user_output()
+
     except Exception as e:
         log.debug(f"""
                 Error message: {e}
@@ -263,16 +278,30 @@ def cli_week_report():
     sql_data = reportic_database_class.Database(DATABASEPATH)
     first_name, last_name, team_name = sql_data.get_user_table()
 
+    current_calender_week = CALENDER_WEEK
+    current_year = YEAR
+
+    list_green_entries = list(sql_data.get_entries_green_week_year(
+        current_calender_week, current_year))
+
+    list_red_entries = list(sql_data.get_entries_red_week_year(
+        current_calender_week, current_year))
+
+    list_amber_entries = list(sql_data.get_entries_amber_week_year(
+        current_calender_week, current_year))
+    list_meetings_enries = list(sql_data.get_entries_meeting_week_year(
+        current_calender_week, current_year))
+
     # clean console
     log.debug("cli_week_report() was executed")
     clean_console()
     print("Weekly Report")
     print(f"KW {datetime.date.today().isocalendar()[1]}")
     print(f"Name: {first_name} {last_name}     Team: {team_name}")
-    print(f"{bcolors.RED}Red:{bcolors.ENDC}")
-    print(f"{bcolors.GREEN}Amber:{bcolors.ENDC}")
-    print(f"{bcolors.YELLOW}Green:{bcolors.ENDC}")
-    print(f"{bcolors.OKBLUE}Meetings:{bcolors.ENDC}")
+    print(f"{bcolors.RED}Red: {list_red_entries} {bcolors.ENDC}")
+    print(f"{bcolors.GREEN}Green: {list_green_entries} {bcolors.ENDC}")
+    print(f"{bcolors.YELLOW}Amber: {list_amber_entries} {bcolors.ENDC}")
+    print(f"{bcolors.OKBLUE}Meetings: {list_meetings_enries} {bcolors.ENDC}")
     cli_menue_return_workreport()
 
 
@@ -365,11 +394,12 @@ def cli_add_entry():
 
     # get time and kw
     date_obj, date_formatted, calender_week = get_time_strings()
-    print(
-        f"Date1: {date_obj} Date2: {date_formatted} CalenderWeekNumber: {calender_week}")
+    log.debug(
+        f"Date2: {date_formatted} CalenderWeekNumber: {calender_week}")
     # database handling
     sql_database = reportic_database_class.Database(DATABASEPATH)
-    sql_database.set_entry(category, entry_text, calender_week, date_formatted)
+    sql_database.set_entry_table(
+        category, entry_text, calender_week, date_formatted)
 
     cli_menue_return()
 
