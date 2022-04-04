@@ -319,11 +319,14 @@ def cli_week_report():
     print("Weekly Report")
     print(f"KW {datetime.date.today().isocalendar()[1]}")
     print(f"Name: {first_name} {last_name}     Team: {team_name}")
-    print(f"{bcolors.RED}Red: {list_red_entries} {bcolors.ENDC}")
+    print(f"{bcolors.RED}Red:{bcolors.ENDC}")
     format_list(list_red_entries)
-    print(f"{bcolors.GREEN}Green: {list_green_entries} {bcolors.ENDC}")
-    print(f"{bcolors.YELLOW}Amber: {list_amber_entries} {bcolors.ENDC}")
-    print(f"{bcolors.OKBLUE}Meetings: {list_meetings_enries} {bcolors.ENDC}")
+    print(f"{bcolors.GREEN}Green:{bcolors.ENDC}")
+    format_list(list_green_entries)
+    print(f"{bcolors.YELLOW}Amber:{bcolors.ENDC}")
+    format_list(list_amber_entries)
+    print(f"{bcolors.OKBLUE}Meetings:{bcolors.ENDC}")
+    format_list(list_meetings_enries)
     cli_menue_return_workreport()
 
 
