@@ -22,9 +22,9 @@ class Database():
         reportic.log.debug(f"{self.path}")
         try:
             self.connection = sqlite3.connect(f"{self.path}")
-            print("Connection to database true")
+            reportic.log.debug("Connection to database true")
         except:
-            print("Connection to database false")
+            reportic.log.debug("Connection to database false")
             quit()
 
         if self.__create_empty_database() == True:
@@ -167,6 +167,15 @@ class Database():
         print(len(results))
         self.__close()
         return results
+
+    def delete_entry_by_text_category_year_kw(self, category, year, calendar_week, entry_text):
+        """Delete an entrie from database"""
+        print("entry was deleted")
+        sql_cmd_delete = (f"""
+                       DELETE FROM entry
+                       WHERE STRFTIME('%Y', date)  = "{year}" AND category="{category}" AND calender_week="{calendar_week}" AND entry_text="{entry_text}" ;
+                       """)
+        self.__sql_cmd(sql_cmd_delete)
 
     def __sql_cmd(self, sql_cmd_string) -> sqlite3.Cursor:
         """

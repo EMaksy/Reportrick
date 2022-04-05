@@ -6,6 +6,8 @@ import datetime
 from datetime import date
 import time
 import os
+
+from zmq import EVENT_HANDSHAKE_FAILED_NO_DETAIL
 import reportic_database_class
 
 # GLOBALS
@@ -366,14 +368,21 @@ def cli_menue_return_workreport():
             "In which category?"
             category = choose_category()
             print(category)
-            year = 2022
-            kw = 13
+            year = YEAR
+            kw = CALENDER_WEEK
             sql_data = reportic_database_class.Database(DATABASEPATH)
-            print(sql_data.get_entries_text_by_category_week_year(
+            # output all enties
+            format_list(sql_data.get_entries_text_by_category_week_year(
                 kw, year, category))
-
-            break
-
+            entry_text = input("Input the message that you want to delete")
+            print(
+                f"Year: {YEAR}, KW:{kw} CATEGORY:{category} entry_txt:{entry_text}")
+            sql_data2 = reportic_database_class.Database(DATABASEPATH)
+            sql_data2.delete_entry_by_text_category_year_kw(
+                category, year, kw, entry_text)
+            log.debug(f"Entry {entry_text} was deleted")
+            clean_console()
+            cli_week_report()
         if return_to_main_menue == "e":
             # clean and end programm
             clean_console()
