@@ -17,7 +17,6 @@ file_dir_database = "/database"
 relative_file = "/reportic_database.sqlite"
 DATABASEPATH = relative_path_to_project + file_dir_database + relative_file
 # DATE
-global YEAR, CALENDER_WEEK
 YEAR = str(date.today().year)
 CALENDER_WEEK = str(datetime.date.today().isocalendar()[1])
 
@@ -242,6 +241,7 @@ def cli_menue_interface():
 
 def cli_change_global_date():
     """Change Dates of an workreport"""
+    global YEAR, CALENDER_WEEK
     YEAR = input("Enter the year for the workreport  ")
     CALENDER_WEEK = input("Please input the CALENDER WEEK  ")
     print(
@@ -305,6 +305,7 @@ def cli_week_report():
     sql_data = reportic_database_class.Database(DATABASEPATH)
     first_name, last_name, team_name = sql_data.get_user_table()
 
+    global YEAR, CALENDER_WEEK
     current_calender_week = CALENDER_WEEK
     current_year = YEAR
 
