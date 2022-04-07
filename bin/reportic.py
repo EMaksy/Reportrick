@@ -7,8 +7,9 @@ from datetime import date
 import time
 import os
 
-from zmq import EVENT_HANDSHAKE_FAILED_NO_DETAIL
+
 import reportic_database_class
+import reportic_generate
 
 # GLOBALS
 __version__ = "0.1.0"
@@ -227,6 +228,10 @@ def cli_menue_interface():
         if menue_selector_number == "5":
             clean_console()
             cli_menue_config_user()
+
+        if menue_selector_number == "4":
+            pass
+
         if menue_selector_number == "3":
             # list all week entries
             cli_week_report()
@@ -234,7 +239,6 @@ def cli_menue_interface():
             clean_console()
             cli_change_global_date()
             cli_menue_return()
-
         if menue_selector_number == "1":
             # list all week entries
             clean_console()

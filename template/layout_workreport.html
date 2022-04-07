@@ -89,8 +89,6 @@
             width: 80%;
 
             flex-wrap: wrap;
-
-
         }
 
         .container .box footer {
@@ -124,7 +122,9 @@
                             <p>RED:</p>
                         </div>
                         <div class="entry_red">
-                            <p>ENTRY</p>
+                            {% for entry in red_entries%}
+                            <p>{{entry}}</p>
+                            {%endfor%}
                         </div>
                     </div>
                     <div class="article_report_category_amber">
@@ -132,7 +132,9 @@
                             <p>AMBER:</p>
                         </div>
                         <div class="entry_amber">
-                            <p>ENTRY</p>
+                            {% for entry in amber_entries%}
+                            <p>{{entry}}</p>
+                            {%endfor%}
                         </div>
                     </div>
                     <div class="article_report_category_green">
@@ -140,7 +142,9 @@
                             <p>GREEN</p>
                         </div>
                         <div class="entry_green">
-                            <p>ENTRY</p>
+                            {% for entry in green_entries%}
+                            <p>{{entry}}</p>
+                            {%endfor%}
                         </div>
                     </div>
                     <div class="article_report_category_meeting">
@@ -148,8 +152,9 @@
                             <p>Meeting</p>
                         </div>
                         <div class="entry_meeting">
-                            <p>ENTRY</p>
-
+                            {% for entry in meeting_entries%}
+                            <p>{{entry}}</p>
+                            {%endfor%}
                         </div>
                     </div>
                 </div>
