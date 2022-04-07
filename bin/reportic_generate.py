@@ -16,13 +16,18 @@ def generade_html_and_pdf(red_list, amber_list, green_list, meeting_list):
     jinja2_env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(PATH_TEMPLATE))
 
-    red_list = ["Testen", "WESTEN", "Fisten"]
+    red_list, amber_list, green_list, meeting_list = ["Testen", "WESTEN", "Fisten"], [
+        "Testen", "WESTEN", "Fisten"], [
+        "Testen", "WESTEN", "Fisten"], [
+        "Testen", "WESTEN", "Fisten"]
     jinja2_var = {
         'title': 'WORKREPORT',
         'red_entries': red_list,
         'amber_entries': amber_list,
-        'green_entires': green_list,
-        'meeting_entries': meeting_list
+        'green_entries': green_list,
+        'meeting_entries': meeting_list,
+        'user_data': ["Eugen", "Maksymenko", "Team"],
+        'time_data': ["Date", "CALENDERWEEK"]
     }
     template = jinja2_env.get_template(TEMPLATE_NAME)
 
