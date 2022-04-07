@@ -1,8 +1,7 @@
 
-html body{
-  width: auto;
-  height: 100%;
-  background-color: rgb(177, 177, 177);
+html,
+body {
+height: 100%;
 }
 
 .container {
@@ -10,7 +9,6 @@ html body{
   min-height: 100%;
 	display: flex;
 	flex-direction: column;
-	
 
 }
 
@@ -19,60 +17,56 @@ html body{
   color: white;
   font-family: sans-serif;
   font-size: 36px;
+  padding: 20px;
+  
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+
 }
 
-.container .box header,article,footer {
-  text-align: center;
-  color: white;
-  font-family: sans-serif;
-  font-size: 36px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
 
 .container .box header{
   background-color: rgb(61, 114, 160);	
 	height:auto;
 }
+.container .box article{
+  flex: 1;
+}
+.container .box footer{
+  height:300px;
+}
+
+
+
 
 .header_content {
   border: 1px solid rgb(209, 0, 0);
 }
 
 
-
-.article_report_category_red{
+.article_report_category_red,.article_report_category_green,
+.article_report_category_meeting,.article_report_category_amber{
   display: flex;
   flex-direction: row;
-  background-color: red;
   justify-content: space-around;
   border: 1px solid rgb(21, 0, 0);
 }
+.article_report_category_red{
+  background-color: red;
+}
 .article_report_category_amber{
-  display: flex;
-  flex-direction: row;
+
   background-color: rgb(255, 153, 0);
-  justify-content: space-around;
-  height: auto;
 }
 .article_report_category_green{
-  display: flex;
-  flex-direction: row;
   background-color: rgb(6, 161, 27);
-  justify-content: space-around;
-  height: auto;
 }
 .article_report_category_meeting{
-  display: flex;
-  flex-direction: row;
   background-color: rgb(112, 78, 192);
-  justify-content: space-around;
-  height: auto;
 }
+
 .category_red,.category_amber,.category_green,.category_meeting {
   display: flex;
   width: 20%; 
