@@ -374,7 +374,7 @@ def cli_menue_return_workreport():
             # output all enties
             format_list(sql_data.get_entries_text_by_category_week_year(
                 kw, year, category))
-            entry_text = input("Input the message that you want to delete")
+            entry_text = input("Input the message that you want to delete  ")
             print(
                 f"Year: {YEAR}, KW:{kw} CATEGORY:{category} entry_txt:{entry_text}")
             sql_data2 = reportic_database_class.Database(DATABASEPATH)
