@@ -1,4 +1,5 @@
 import argparse
+from ast import While
 import logging
 from logging.config import dictConfig
 import sys
@@ -243,6 +244,28 @@ def cli_menue_interface():
             # list all week entries
             clean_console()
             cli_add_entry()
+
+
+def cli_generate_html_or_pdf():
+    """Ask user if pdf or html should be created"""
+
+    # get user data for function call
+    while True:
+
+        user_choice = input("""
+                          Input which file format should be generated?
+                          1:HTML
+                          2:PDF
+                          3:HTML and PDF
+                          """)
+        if user_choice == "1" or user_choice == "HTML":
+            reportic_generate.generate_html()
+        if user_choice == "2" or user_choice == "PDF":
+            reportic_generate.generate_html_pdf()
+        if user_choice == "3" or user_choice == "HTML and PDF":
+            reportic_generate.generate_html_and_pdf()
+        else:
+            print("Sorry wrong input")
 
 
 def cli_change_global_date():
