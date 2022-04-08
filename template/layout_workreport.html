@@ -107,10 +107,11 @@
                 <h2>WORK REPORT</h1>
                     <div class='header_content'>
                         <div class="header_content_person_info">
-                            <p>Name: LastName: </p>
+                            <p>{{ user_data[0] }} {{ user_data[1] }}</p>
+
                         </div>
                         <div class="header_content_date">
-                            <p>DATE + Calender Week</p>
+                            <p> YEAR: {{ time_data[0] }} CALENDER WEEK{{ time_data[1] }}</p>
                         </div>
                     </div>
             </header>
@@ -162,7 +163,9 @@
 
             <footer>
                 <div class="footer_data">
-                    <h4>TEAM NAME</h4>
+                    {% for entry in team_data%}
+                    <h5>{{entry}}</h5>
+                    {%endfor%}
                 </div>
             </footer>
         </div>

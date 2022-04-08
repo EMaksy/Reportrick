@@ -1,5 +1,6 @@
 import argparse
 from ast import While
+from calendar import calendar
 import logging
 from logging.config import dictConfig
 import sys
@@ -231,7 +232,9 @@ def cli_menue_interface():
             cli_menue_config_user()
 
         if menue_selector_number == "4":
-            pass
+            clean_console()
+            cli_generate_html_or_pdf()
+            cli_menue_return()
 
         if menue_selector_number == "3":
             # list all week entries
@@ -248,7 +251,8 @@ def cli_menue_interface():
 
 def cli_generate_html_or_pdf():
     """Ask user if pdf or html should be created"""
-
+    # collect all data for file generation
+    list_meetings_enries, list_green_entries, list_amber_entries, list_red_entries, list_team_data, list_user_data, list_time_data, list_user_data = collect_workreport_data()
     # get user data for function call
     while True:
 
@@ -259,13 +263,45 @@ def cli_generate_html_or_pdf():
                           3:HTML and PDF
                           """)
         if user_choice == "1" or user_choice == "HTML":
-            reportic_generate.generate_html()
+            reportic_generate.generate_html(list_meetings_enries, list_green_entries, list_amber_entries,
+                                            list_red_entries, list_team_data, list_user_data, list_time_data)
+            break
         if user_choice == "2" or user_choice == "PDF":
-            reportic_generate.generate_html_pdf()
+            reportic_generate.generate_pdf(list_meetings_enries, list_green_entries, list_amber_entries,
+                                           list_red_entries, list_team_data, list_user_data, list_time_data)
+            break
         if user_choice == "3" or user_choice == "HTML and PDF":
-            reportic_generate.generate_html_and_pdf()
+            reportic_generate.generate_html_and_pdf(list_meetings_enries, list_green_entries, list_amber_entries,
+                                                    list_red_entries, list_team_data, list_user_data, list_time_data)
+            break
         else:
             print("Sorry wrong input")
+
+
+def collect_workreport_data() -> list:
+    """ Collect all required user data for workreport"""
+
+    sql_data = reportic_database_class.Database(DATABASEPATH)
+    first_name, last_name, team_name = sql_data.get_user_table()
+    global YEAR, CALENDER_WEEK
+    current_calender_week = CALENDER_WEEK
+    current_year = YEAR
+
+    list_time_data = [YEAR, CALENDER_WEEK]
+
+    list_user_data = [first_name, last_name]
+    list_team_data = [team_name]
+
+    list_meetings_enries = format_list_and_return(list(sql_data.get_entries_meeting_week_year(
+        current_calender_week, current_year)))
+    list_green_entries = format_list_and_return(list(sql_data.get_entries_green_week_year(
+        current_calender_week, current_year)))
+    list_amber_entries = format_list_and_return(list(sql_data.get_entries_amber_week_year(
+        current_calender_week, current_year)))
+    list_red_entries = format_list_and_return(list(sql_data.get_entries_red_week_year(
+        current_calender_week, current_year)))
+
+    return list_meetings_enries, list_green_entries, list_amber_entries, list_red_entries, list_team_data, list_user_data, list_time_data, list_user_data
 
 
 def cli_change_global_date():
@@ -317,7 +353,7 @@ def cli_menue_config_user():
     cli_menue_return()
 
 
-def format_list(entry_list):
+def format_list_print(entry_list):
     """A given list of date is formated"""
     counter = 1
     for x in entry_list:
@@ -327,6 +363,18 @@ def format_list(entry_list):
         string_x = string_x.replace("')", "")
         print(f"{counter}:{string_x}")
         counter += 1
+
+
+def format_list_and_return(entry_list) -> list:
+    """A given list is formed and returned"""
+    cleaned_list = []
+    for x in entry_list:
+        string_x = str(x)
+        string_x = string_x.replace(",", "")
+        string_x = string_x.replace("('", "")
+        string_x = string_x.replace("')", "")
+        cleaned_list.append(string_x)
+    return cleaned_list
 
 
 def cli_week_report():
@@ -354,13 +402,13 @@ def cli_week_report():
     print(f"KW {datetime.date.today().isocalendar()[1]}")
     print(f"Name: {first_name} {last_name}     Team: {team_name}")
     print(f"{bcolors.RED}Red:{bcolors.ENDC}")
-    format_list(list_red_entries)
+    format_list_print(list_red_entries)
     print(f"{bcolors.GREEN}Green:{bcolors.ENDC}")
-    format_list(list_green_entries)
+    format_list_print(list_green_entries)
     print(f"{bcolors.YELLOW}Amber:{bcolors.ENDC}")
-    format_list(list_amber_entries)
+    format_list_print(list_amber_entries)
     print(f"{bcolors.OKBLUE}Meetings:{bcolors.ENDC}")
-    format_list(list_meetings_enries)
+    format_list_print(list_meetings_enries)
     cli_menue_return_workreport()
 
 
@@ -399,7 +447,7 @@ def cli_menue_return_workreport():
             kw = CALENDER_WEEK
             sql_data = reportic_database_class.Database(DATABASEPATH)
             # output all enties
-            format_list(sql_data.get_entries_text_by_category_week_year(
+            format_list_print(sql_data.get_entries_text_by_category_week_year(
                 kw, year, category))
             entry_text = input("Input the message that you want to delete  ")
             print(

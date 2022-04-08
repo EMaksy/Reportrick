@@ -12,7 +12,7 @@ CREATED_PDF_NAME = "test-jinja.pdf"
 CREATED_HTML_NAME = "test-jinja.html"
 
 
-def generate_html_and_pdf(red_list, amber_list, green_list, meeting_list, user_data, time_data):
+def generate_html_and_pdf(meeting_list, green_list, amber_list, red_list, team_data, user_data, time_data):
     jinja2_env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(PATH_TEMPLATE))
 
@@ -23,25 +23,19 @@ def generate_html_and_pdf(red_list, amber_list, green_list, meeting_list, user_d
         'green_entries': green_list,
         'meeting_entries': meeting_list,
         'user_data': user_data,
+        'team_data': team_data,
         'time_data': time_data
     }
 
     template = jinja2_env.get_template(TEMPLATE_NAME)
 
-    # debug info
-    print(template.render(jinja2_var))
-
-    # creates file
+    # creates html file
     myfile = open(
         PATH_CREATED_HTML, "w")
     myfile.write(template.render(jinja2_var))
     myfile.close()
-
-    print(oct(os.stat(PATH_CREATED_HTML).st_mode))
-    print(weasyprint.HTML(
-        PATH_CREATED_HTML).write_pdf(PATH__CREATED_PDF))
-    doc_pdf = weasyprint.HTML(
-        PATH_CREATED_HTML).write_pdf(PATH__CREATED_PDF)
+    # create pdf
+    weasyprint.HTML(PATH_CREATED_HTML).write_pdf(PATH__CREATED_PDF)
     print(f"""
           File created at:
           HTML: {PATH_CREATED_HTML}
@@ -49,7 +43,7 @@ def generate_html_and_pdf(red_list, amber_list, green_list, meeting_list, user_d
           """)
 
 
-def generate_html(red_list, amber_list, green_list, meeting_list, user_data, time_data):
+def generate_html(meeting_list, green_list, amber_list, red_list, team_data, user_data, time_data):
     jinja2_env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(PATH_TEMPLATE))
 
@@ -60,15 +54,11 @@ def generate_html(red_list, amber_list, green_list, meeting_list, user_data, tim
         'green_entries': green_list,
         'meeting_entries': meeting_list,
         'user_data': user_data,
+        'team_data': team_data,
         'time_data': time_data
     }
 
     template = jinja2_env.get_template(TEMPLATE_NAME)
-
-    # debug info
-    # print(template.render(jinja2_var))
-
-    # creates file
     myfile = open(
         PATH_CREATED_HTML, "w")
     myfile.write(template.render(jinja2_var))
@@ -79,7 +69,7 @@ def generate_html(red_list, amber_list, green_list, meeting_list, user_data, tim
         """)
 
 
-def generate_pdf(red_list, amber_list, green_list, meeting_list, user_data, time_data):
+def generate_pdf(meeting_list, green_list, amber_list, red_list, team_data, user_data, time_data):
     jinja2_env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(PATH_TEMPLATE))
 
@@ -90,21 +80,18 @@ def generate_pdf(red_list, amber_list, green_list, meeting_list, user_data, time
         'green_entries': green_list,
         'meeting_entries': meeting_list,
         'user_data': user_data,
+        'team_data': team_data,
         'time_data': time_data
     }
 
     template = jinja2_env.get_template(TEMPLATE_NAME)
-
-    # debug info
-    # print(template.render(jinja2_var))
-
     # creates file
     myfile = open(
         PATH_CREATED_HTML, "w")
     myfile.write(template.render(jinja2_var))
     myfile.close()
 
-    doc_pdf = weasyprint.HTML(
+    weasyprint.HTML(
         PATH_CREATED_HTML).write_pdf(PATH__CREATED_PDF)
     os.remove(PATH_CREATED_HTML)
     print(f"""
