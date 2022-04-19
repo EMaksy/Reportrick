@@ -6,9 +6,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        @import url("https://fonts.googleapis.com/css2?family=Mulish&display=swap");
+
         html,
         body {
-            height: 100%;
+            height: 297mm;
+            width: 210mm;
+            font-family: 'Mulish', sans-serif;
         }
 
         .container {
@@ -20,9 +24,7 @@
 
         .container .box {
             text-align: center;
-            color: white;
-            font-family: sans-serif;
-            font-size: 20px;
+            font-size: 36px;
             padding: 20px;
             display: flex;
             flex-direction: column;
@@ -30,8 +32,30 @@
         }
 
         .container .box header {
-            background-color: rgb(61, 114, 160);
             height: auto;
+        }
+
+        header .header_content {
+            display: flex;
+            justify-content: space-between;
+            text-align: left;
+            width: 90%;
+        }
+
+        header .header_content_person_info {
+            text-align: left;
+        }
+
+        header p {
+            margin: 0px;
+        }
+
+        header table {
+            font-size: medium;
+        }
+
+        header table td {
+            padding-left: 10px;
         }
 
         .container .box article {
@@ -42,60 +66,147 @@
             height: 300px;
         }
 
-        .header_content {
-            border: 1px solid rgb(209, 0, 0);
+        .article_report_content_container {
+            margin: 40px 0px 100px 0px;
+            font-size: x-large;
         }
 
-        .article_report_category_red,
-        .article_report_category_green,
-        .article_report_category_meeting,
-        .article_report_category_amber {
+        .article_report_content_container .article_report_title {
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .article_report_content_container .article_report_title .title-category {
+            font-size: larger;
+            border-bottom: 1px solid gray;
+        }
+
+        .article_report_content_container .article_report_title .title-entry {
+            font-size: larger;
+            border-bottom: 1px solid gray;
+        }
+
+        .article_report_content_container .article_report_category_red,
+        .article_report_content_container .article_report_title,
+        .article_report_content_container .article_report_category_green,
+        .article_report_content_container .article_report_category_meeting,
+        .article_report_content_container .article_report_category_amber {
             display: flex;
             flex-direction: row;
-            justify-content: space-around;
-            border: 1px solid rgb(21, 0, 0);
+            margin-bottom: 20px;
         }
 
-        .article_report_category_red {
-            background-color: red;
+        .article_report_content_container .article_report_category_red p,
+        .article_report_content_container .article_report_title p,
+        .article_report_content_container .article_report_category_green p,
+        .article_report_content_container .article_report_category_meeting p,
+        .article_report_content_container .article_report_category_amber p {
+            margin: 0px;
         }
 
-        .article_report_category_amber {
-
-            background-color: rgb(255, 153, 0);
+        .article_report_content_container .article_report_category_red .category,
+        .article_report_content_container .article_report_title .category,
+        .article_report_content_container .article_report_title .title-category,
+        .article_report_content_container .article_report_category_red .category-red,
+        .article_report_content_container .article_report_title .category-red,
+        .article_report_content_container .article_report_category_red .category-amber,
+        .article_report_content_container .article_report_title .category-amber,
+        .article_report_content_container .article_report_category_red .category-green,
+        .article_report_content_container .article_report_title .category-green,
+        .article_report_content_container .article_report_category_red .category-meeting,
+        .article_report_content_container .article_report_title .category-meeting,
+        .article_report_content_container .article_report_category_green .category,
+        .article_report_content_container .article_report_category_green .article_report_title .title-category,
+        .article_report_content_container .article_report_title .article_report_category_green .title-category,
+        .article_report_content_container .article_report_category_green .category-red,
+        .article_report_content_container .article_report_category_green .category-amber,
+        .article_report_content_container .article_report_category_green .category-green,
+        .article_report_content_container .article_report_category_green .category-meeting,
+        .article_report_content_container .article_report_category_meeting .category,
+        .article_report_content_container .article_report_category_meeting .article_report_title .title-category,
+        .article_report_content_container .article_report_title .article_report_category_meeting .title-category,
+        .article_report_content_container .article_report_category_meeting .category-red,
+        .article_report_content_container .article_report_category_meeting .category-amber,
+        .article_report_content_container .article_report_category_meeting .category-green,
+        .article_report_content_container .article_report_category_meeting .category-meeting,
+        .article_report_content_container .article_report_category_amber .category,
+        .article_report_content_container .article_report_category_amber .article_report_title .title-category,
+        .article_report_content_container .article_report_title .article_report_category_amber .title-category,
+        .article_report_content_container .article_report_category_amber .category-red,
+        .article_report_content_container .article_report_category_amber .category-amber,
+        .article_report_content_container .article_report_category_amber .category-green,
+        .article_report_content_container .article_report_category_amber .category-meeting {
+            text-align: left;
+            width: 30%;
+            font-weight: bold;
         }
 
-        .article_report_category_green {
-            background-color: rgb(6, 161, 27);
+        .article_report_content_container .article_report_category_red .entry,
+        .article_report_content_container .article_report_title .entry,
+        .article_report_content_container .article_report_title .title-entry,
+        .article_report_content_container .article_report_category_green .entry,
+        .article_report_content_container .article_report_category_green .article_report_title .title-entry,
+        .article_report_content_container .article_report_title .article_report_category_green .title-entry,
+        .article_report_content_container .article_report_category_meeting .entry,
+        .article_report_content_container .article_report_category_meeting .article_report_title .title-entry,
+        .article_report_content_container .article_report_title .article_report_category_meeting .title-entry,
+        .article_report_content_container .article_report_category_amber .entry,
+        .article_report_content_container .article_report_category_amber .article_report_title .title-entry,
+        .article_report_content_container .article_report_title .article_report_category_amber .title-entry {
+            text-align: left;
+            width: 70%;
         }
 
-        .article_report_category_meeting {
-            background-color: rgb(112, 78, 192);
+        .article_report_content_container .article_report_category_red .category-red,
+        .article_report_content_container .article_report_title .category-red,
+        .article_report_content_container .article_report_category_green .category-red,
+        .article_report_content_container .article_report_category_meeting .category-red,
+        .article_report_content_container .article_report_category_amber .category-red {
+            color: red;
         }
 
-        .category_red,
-        .category_amber,
-        .category_green,
-        .category_meeting {
-            display: flex;
-            width: 20%;
-
+        .article_report_content_container .article_report_category_red .category-amber,
+        .article_report_content_container .article_report_title .category-amber,
+        .article_report_content_container .article_report_category_green .category-amber,
+        .article_report_content_container .article_report_category_meeting .category-amber,
+        .article_report_content_container .article_report_category_amber .category-amber {
+            color: #F6BE00;
         }
 
-        .entry_red,
-        .entry_amber,
-        .entry_green,
-        .entry_meeting {
+        .article_report_content_container .article_report_category_red .category-green,
+        .article_report_content_container .article_report_title .category-green,
+        .article_report_content_container .article_report_category_green .category-green,
+        .article_report_content_container .article_report_category_meeting .category-green,
+        .article_report_content_container .article_report_category_amber .category-green {
+            color: green;
+        }
+
+        .article_report_content_container .article_report_category_red .category-meeting,
+        .article_report_content_container .article_report_title .category-meeting,
+        .article_report_content_container .article_report_category_green .category-meeting,
+        .article_report_content_container .article_report_category_meeting .category-meeting,
+        .article_report_content_container .article_report_category_amber .category-meeting {
+            color: darkblue;
+        }
+
+        footer {
+            padding: 10px 10px 10px 0px;
+        }
+
+        footer table {
             width: 80%;
-
-            flex-wrap: wrap;
+            text-align: left;
         }
 
-        .container .box footer {
-            text-align: center;
-            height: auto;
-            background-color: violet;
+        footer table th {
+            width: 35%;
         }
+
+        footer table td {
+            border-bottom: 1px solid black;
+        }
+
+        /*# sourceMappingURL=style.css.map */
     </style>
     <title>{{ title }}</title>
 </head>
@@ -104,55 +215,86 @@
     <div class="container">
         <div class="box">
             <header>
-                <h2>WORK REPORT</h1>
+                <h2>WEEKLY WORK REPORT</h1>
                     <div class='header_content'>
                         <div class="header_content_person_info">
-                            <p>{{ user_data[0] }} {{ user_data[1] }}</p>
-
+                            <table>
+                                <tr>
+                                    <th>Employee name:</th>
+                                    <td>{{ user_data[0] }} {{ user_data[1] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Department:</th>
+                                    <td> {% for entry in team_data%}
+                                        {{entry}}
+                                        {%endfor%}</td>
+                                </tr>
+                            </table>
                         </div>
                         <div class="header_content_date">
-                            <p> YEAR: {{ time_data[0] }} CALENDER WEEK{{ time_data[1] }}</p>
+                            <table>
+                                <tr>
+                                    <th>Year:</th>
+                                    <td> {{ time_data[0] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Calender Week:</th>
+                                    <td> {{ time_data[1] }}</td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
             </header>
             <article>
                 <div class="article_report_content_container">
 
+
+                    <div class="article_report_title">
+                        <div class="title-category">
+                            <p>Category</p>
+                        </div>
+                        <div class="title-entry">
+                            <p>Entry</p>
+                        </div>
+                    </div>
+
                     <div class="article_report_category_red">
-                        <div class="category_red">
+                        <div class="category-red">
                             <p>RED:</p>
                         </div>
-                        <div class="entry_red">
+                        <div class="entry">
                             {% for entry in red_entries%}
                             <p>{{entry}}</p>
                             {%endfor%}
                         </div>
+
+
                     </div>
                     <div class="article_report_category_amber">
-                        <div class="category_amber">
+                        <div class="category-amber">
                             <p>AMBER:</p>
                         </div>
-                        <div class="entry_amber">
+                        <div class="entry">
                             {% for entry in amber_entries%}
                             <p>{{entry}}</p>
                             {%endfor%}
                         </div>
                     </div>
                     <div class="article_report_category_green">
-                        <div class="category_green">
+                        <div class="category-green">
                             <p>GREEN</p>
                         </div>
-                        <div class="entry_green">
+                        <div class="entry">
                             {% for entry in green_entries%}
                             <p>{{entry}}</p>
                             {%endfor%}
                         </div>
                     </div>
                     <div class="article_report_category_meeting">
-                        <div class="category_meeting">
+                        <div class="category-meeting">
                             <p>Meeting</p>
                         </div>
-                        <div class="entry_meeting">
+                        <div class="entry">
                             {% for entry in meeting_entries%}
                             <p>{{entry}}</p>
                             {%endfor%}
@@ -163,9 +305,12 @@
 
             <footer>
                 <div class="footer_data">
-                    {% for entry in team_data%}
-                    <h5>{{entry}}</h5>
-                    {%endfor%}
+                    <table class="footer-table">
+                        <tr>
+                            <th>Signature: </th>
+                            <td></td>
+                        </tr>
+                    </table>
                 </div>
             </footer>
         </div>
