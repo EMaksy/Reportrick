@@ -1,11 +1,11 @@
 import sqlite3
+import string
 import reportic
 
 
 class Database():
 
     def __init__(self, path: str, sql_data=None):
-
         self.path = path
         # Initialized in other functions for database connection
         self.connection = None
@@ -15,7 +15,7 @@ class Database():
         self.create_databse_path()
         # table entry, trainee and team has been created
 
-    def create_databse_path(self):
+    def create_databse_path(self) ->bool:
         """
         Create a database by a given path
         """
@@ -52,7 +52,7 @@ class Database():
         entry_id  INTEGER PRIMARY KEY AUTOINCREMENT,
         entry_text TEXT NOT NULL,
         date TEXT NOT NULL,
-        calender_week INTEGER NOT NULL,
+        calendar_week INTEGER NOT NULL,
         category TEXT NOT NULL,
         user_id INTEGER,
         FOREIGN KEY(user_id) REFERENCES user(user_id)
@@ -67,10 +67,10 @@ class Database():
             print("Error, Database  was not created")
             return False
 
-    def get_entries_text_by_category_week_year(self, calender_week, year, category):
+    def get_entries_text_by_category_week_year(self, calendar_week, year, category) -> list:
         """Give a category and it will give you all the entries"""
         sql_search = f"""
-        SELECT entry_text FROM entry WHERE STRFTIME('%Y', date)  = "{year}" AND category="{category}" AND calender_week="{calender_week}" ;
+        SELECT entry_text FROM entry WHERE STRFTIME('%Y', date)  = "{year}" AND category="{category}" AND calendar_week="{calendar_week}" ;
         """
         results = list(self.__sql_cmd(sql_search))
         print(len(results))
@@ -98,7 +98,7 @@ class Database():
             self.__close()
             return False
 
-    def get_user_table(self):
+    def get_user_table(self)->string:
         sql_get_user_data = """
         SELECT  first_name, last_name, team_name FROM user WHERE user_id='1';
         """
@@ -116,52 +116,52 @@ class Database():
         """Add a new entry to database"""
         sql_add_entry = f"""
         INSERT INTO
-        entry(entry_text,category,calender_week,date,user_id)        
+        entry(entry_text,category,calendar_week,date,user_id)        
         VALUES ("{entry_text}","{category}","{kw}","{date}","1")
         """
         self.__sql_cmd(sql_add_entry)
         self.__close()
 
-    def get_entries_green_week_year(self, calender_week, year):
-        """Give all entries for CATEGORY GREEN from a given calender_week and year"""
+    def get_entries_green_week_year(self, calendar_week, year)->list:
+        """Give all entries for CATEGORY GREEN from a given calendar_week and year"""
         sql_search = f"""
-        SELECT entry_text FROM entry WHERE STRFTIME('%Y', date)  = "{year}" AND category="GREEN" AND calender_week="{calender_week}";
+        SELECT entry_text FROM entry WHERE STRFTIME('%Y', date)  = "{year}" AND category="GREEN" AND calendar_week="{calendar_week}";
         """
 
         results = list(self.__sql_cmd(sql_search))
         # self.__close()
         return results
 
-    def get_entries_red_week_year(self, calender_week, year):
-        """Give all entries for CATEGORY RED from a given calender_week and year"""
+    def get_entries_red_week_year(self, calendar_week, year)->list:
+        """Give all entries for CATEGORY RED from a given calendar_week and year"""
         sql_search = f"""
-        SELECT entry_text FROM entry WHERE STRFTIME('%Y', date)  = "{year}" AND category="RED" AND calender_week="{calender_week}";
+        SELECT entry_text FROM entry WHERE STRFTIME('%Y', date)  = "{year}" AND category="RED" AND calendar_week="{calendar_week}";
         """
         results = list(self.__sql_cmd(sql_search))
         return results
 
-    def get_entries_amber_week_year(self, calender_week, year):
-        """Give all entries for CATEGORY AMBER from a given calender_week and year"""
+    def get_entries_amber_week_year(self, calendar_week, year)->list:
+        """Give all entries for CATEGORY AMBER from a given calendar_week and year"""
         sql_search = f"""
-        SELECT entry_text FROM entry WHERE STRFTIME('%Y', date)  = "{year}" AND category="AMBER" AND calender_week="{calender_week}";
-        """
-        results = list(self.__sql_cmd(sql_search))
-        # self.__close()
-        return results
-
-    def get_entries_meeting_week_year(self, calender_week, year):
-        """Give all entries for CATEGORY MEETING from a given calender_week and year"""
-        sql_search = f"""
-        SELECT entry_text FROM entry WHERE STRFTIME('%Y', date)  = "{year}" AND category="MEETING" AND calender_week="{calender_week}" ;
+        SELECT entry_text FROM entry WHERE STRFTIME('%Y', date)  = "{year}" AND category="AMBER" AND calendar_week="{calendar_week}";
         """
         results = list(self.__sql_cmd(sql_search))
         # self.__close()
         return results
 
-    def get_entries_text_by_category_week_year(self, calender_week, year, category):
+    def get_entries_meeting_week_year(self, calendar_week, year)->list:
+        """Give all entries for CATEGORY MEETING from a given calendar_week and year"""
+        sql_search = f"""
+        SELECT entry_text FROM entry WHERE STRFTIME('%Y', date)  = "{year}" AND category="MEETING" AND calendar_week="{calendar_week}" ;
+        """
+        results = list(self.__sql_cmd(sql_search))
+        # self.__close()
+        return results
+
+    def get_entries_text_by_category_week_year(self, calendar_week, year, category)->list:
         """Give a category and it will give you all the entries"""
         sql_search = f"""
-        SELECT entry_text FROM entry WHERE STRFTIME('%Y', date)  = "{year}" AND category="{category}" AND calender_week="{calender_week}" ;
+        SELECT entry_text FROM entry WHERE STRFTIME('%Y', date)  = "{year}" AND category="{category}" AND calendar_week="{calendar_week}" ;
         """
         results = list(self.__sql_cmd(sql_search))
         print(len(results))
@@ -173,7 +173,7 @@ class Database():
         print("entry was deleted")
         sql_cmd_delete = (f"""
                        DELETE FROM entry
-                       WHERE STRFTIME('%Y', date)  = "{year}" AND category="{category}" AND calender_week="{calendar_week}" AND entry_text="{entry_text}" ;
+                       WHERE STRFTIME('%Y', date)  = "{year}" AND category="{category}" AND calendar_week="{calendar_week}" AND entry_text="{entry_text}" ;
                        """)
         self.__sql_cmd(sql_cmd_delete)
 
