@@ -15,7 +15,7 @@ class Database():
         self.create_databse_path()
         # table entry, trainee and team has been created
 
-    def create_databse_path(self) ->bool:
+    def create_databse_path(self) -> bool:
         """
         Create a database by a given path
         """
@@ -98,7 +98,7 @@ class Database():
             self.__close()
             return False
 
-    def get_user_table(self)->string:
+    def get_user_table(self) -> string:
         sql_get_user_data = """
         SELECT  first_name, last_name, team_name FROM user WHERE user_id='1';
         """
@@ -122,7 +122,7 @@ class Database():
         self.__sql_cmd(sql_add_entry)
         self.__close()
 
-    def get_entries_green_week_year(self, calendar_week, year)->list:
+    def get_entries_green_week_year(self, calendar_week, year) -> list:
         """Give all entries for CATEGORY GREEN from a given calendar_week and year"""
         sql_search = f"""
         SELECT entry_text FROM entry WHERE STRFTIME('%Y', date)  = "{year}" AND category="GREEN" AND calendar_week="{calendar_week}";
@@ -132,7 +132,7 @@ class Database():
         # self.__close()
         return results
 
-    def get_entries_red_week_year(self, calendar_week, year)->list:
+    def get_entries_red_week_year(self, calendar_week, year) -> list:
         """Give all entries for CATEGORY RED from a given calendar_week and year"""
         sql_search = f"""
         SELECT entry_text FROM entry WHERE STRFTIME('%Y', date)  = "{year}" AND category="RED" AND calendar_week="{calendar_week}";
@@ -140,7 +140,7 @@ class Database():
         results = list(self.__sql_cmd(sql_search))
         return results
 
-    def get_entries_amber_week_year(self, calendar_week, year)->list:
+    def get_entries_amber_week_year(self, calendar_week, year) -> list:
         """Give all entries for CATEGORY AMBER from a given calendar_week and year"""
         sql_search = f"""
         SELECT entry_text FROM entry WHERE STRFTIME('%Y', date)  = "{year}" AND category="AMBER" AND calendar_week="{calendar_week}";
@@ -149,7 +149,7 @@ class Database():
         # self.__close()
         return results
 
-    def get_entries_meeting_week_year(self, calendar_week, year)->list:
+    def get_entries_meeting_week_year(self, calendar_week, year) -> list:
         """Give all entries for CATEGORY MEETING from a given calendar_week and year"""
         sql_search = f"""
         SELECT entry_text FROM entry WHERE STRFTIME('%Y', date)  = "{year}" AND category="MEETING" AND calendar_week="{calendar_week}" ;
@@ -158,7 +158,7 @@ class Database():
         # self.__close()
         return results
 
-    def get_entries_text_by_category_week_year(self, calendar_week, year, category)->list:
+    def get_entries_text_by_category_week_year(self, calendar_week, year, category) -> list:
         """Give a category and it will give you all the entries"""
         sql_search = f"""
         SELECT entry_text FROM entry WHERE STRFTIME('%Y', date)  = "{year}" AND category="{category}" AND calendar_week="{calendar_week}" ;

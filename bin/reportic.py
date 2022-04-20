@@ -1,5 +1,4 @@
 import argparse
-from ast import While
 from calendar import calendar
 import logging
 from logging.config import dictConfig
@@ -8,6 +7,7 @@ import datetime
 from datetime import date
 import time
 import os
+from unicodedata import category
 
 
 import reportic_database_class
@@ -27,6 +27,10 @@ CALENDER_WEEK = str(datetime.date.today().isocalendar()[1])
 
 
 class MissingSubCommand(ValueError):
+    pass
+
+
+class CategoryError():
     pass
 
 
@@ -111,6 +115,20 @@ def parsecli(cliargs=None) -> argparse.Namespace:
                         version='%(prog)s ' + __version__
                         )
 
+    # Add sub cmd
+   # subparser
+    subparsers = parser.add_subparsers(help='Available sub commands')
+    # add cmd
+
+    parser_add = subparsers.add_parser(
+        "add", help="adds a new entry to your day")
+    parser_add.set_defaults(func=cmd_add)
+    parser_add.add_argument(
+        "category", type=str, help="Add Category [red, amber, green, meeting]")
+
+    parser_add.add_argument(
+        "entry", type=str, help="Add entry which describes the activity")
+
     args = parser.parse_args(args=cliargs)
     # Setup logging and the log level according to the "-v" option
     dictConfig(DEFAULT_LOGGING_DICT)
@@ -124,7 +142,6 @@ def parsecli(cliargs=None) -> argparse.Namespace:
         if os.path.exists(DATABASEPATH) != True:
             create_database_dir()
             create_database()
-
         cli_menue()
 
     # parser.print_help()
@@ -138,12 +155,32 @@ def parsecli(cliargs=None) -> argparse.Namespace:
     return args
 
 
+def cmd_add(args):
+    """
+    """
+    # time.sleep(220222)
+    log.debug("add selected")
+    CATEGORY_LIST
+
+    # get time and kw
+    if args.category in CATEGORY_LIST:
+        date_obj, date_formatted, calender_week = get_time_strings()
+        log.debug(
+            f" {args.category}, {args.entry}, Date2: {date_formatted} CalenderWeekNumber: {calender_week}")
+        # database handling
+        sql_database = reportic_database_class.Database(DATABASEPATH)
+        sql_database.set_entry_table(
+            args.category, args.entry, calender_week, date_formatted)
+    else:
+        print("Wrong category")
+
+
 def create_database():
     """Create empty database"""
     log.debug("create_database()")
     sql_data = None
     sql_database = reportic_database_class.Database(DATABASEPATH, sql_data)
-    sql_database.close
+    # sql_database.close
 
 
 def create_database_dir():
@@ -154,23 +191,6 @@ def create_database_dir():
         log.debug(f"Directory  created at{DATABASEPATH}")
     except:
         log.error(f"Path {DATABASEPATH} was not created")
-
-
-def main(cliargs=None) -> int:
-    """Entry point for the application script
-    :param cliargs: Arguments to parse or None (=use :class:`sys.argv`)
-    :return: error code
-    """
-    clean_console()
-    try:
-        args = parsecli(cliargs)
-        # do some useful things here...
-        # If everything was good, return without error:
-        return 0
-
-    except MissingSubCommand as error:
-        log.fatal(error)
-        return 888
 
 
 def get_time_strings():
@@ -220,7 +240,7 @@ def cli_menue_interface():
     """Loop for user interface"""
     log.debug("cli_menue_interface() was executed")
     keep_going = True
-    #print(YEAR, CALENDER_WEEK)
+    # print(YEAR, CALENDER_WEEK)
     while keep_going == True:
         menue_selector_number = input("Choose an option: ")
         if menue_selector_number == "6":
@@ -520,6 +540,24 @@ def cli_add_entry():
 
 def cli_delete_entry_current_week():
     """List all entries of this week  and gives the option to delete them"""
+
+
+def main(cliargs=None) -> int:
+    """Entry point for the application script
+    :param cliargs: Arguments to parse or None (=use :class:`sys.argv`)
+    :return: error code
+    """
+    # clean_console()
+    try:
+        args = parsecli(cliargs)
+        # do some useful things here...
+        # If everything was good, return without error:
+        args.func(args)
+        return 0
+
+    except MissingSubCommand as error:
+        log.fatal(error)
+        return 888
 
 
 if __name__ == "__main__":
