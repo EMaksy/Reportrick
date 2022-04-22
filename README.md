@@ -1,2 +1,2 @@
 # Reportic
-IHK Final Project
+A CLI Tool for creating Weekly reports.
