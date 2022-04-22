@@ -1,2 +1,4 @@
 weasyprint
 jinja2
+pip
+wheel
