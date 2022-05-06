@@ -7,7 +7,7 @@ import weasyprint
 PATH_TEMPLATE = "./template"
 TEMPLATE_NAME = "layout_workreport.html"
 PATH_CREATED_HTML = "workreport/jinja_workreport.html"
-PATH__CREATED_PDF = "workreport/jinja_workreport.pdf"
+PATH_CREATED_PDF = "workreport/jinja_workreport.pdf"
 CREATED_PDF_NAME = "test-jinja.pdf"
 CREATED_HTML_NAME = "test-jinja.html"
 
@@ -35,12 +35,9 @@ def generate_html_and_pdf(meeting_list, green_list, amber_list, red_list, team_d
     myfile.write(template.render(jinja2_var))
     myfile.close()
     # create pdf
-    weasyprint.HTML(PATH_CREATED_HTML).write_pdf(PATH__CREATED_PDF)
-    print(f"""
-          File created at:
-          HTML: {PATH_CREATED_HTML}
-          PDF:  {PATH_CREATED_HTML}
-          """)
+    weasyprint.HTML(PATH_CREATED_HTML).write_pdf(PATH_CREATED_PDF)
+    print(
+        f"File created at:\nHTML: {PATH_CREATED_PDF}\nPDF:  {PATH_CREATED_HTML}\n")
 
 
 def generate_html(meeting_list, green_list, amber_list, red_list, team_data, user_data, time_data):
@@ -63,10 +60,7 @@ def generate_html(meeting_list, green_list, amber_list, red_list, team_data, use
         PATH_CREATED_HTML, "w")
     myfile.write(template.render(jinja2_var))
     myfile.close()
-    print(f"""
-        File created at:
-        HTML: {PATH_CREATED_HTML}
-        """)
+    print(f"File created at:\nHTML: {PATH_CREATED_HTML}")
 
 
 def generate_pdf(meeting_list, green_list, amber_list, red_list, team_data, user_data, time_data):
@@ -92,12 +86,9 @@ def generate_pdf(meeting_list, green_list, amber_list, red_list, team_data, user
     myfile.close()
 
     weasyprint.HTML(
-        PATH_CREATED_HTML).write_pdf(PATH__CREATED_PDF)
+        PATH_CREATED_HTML).write_pdf(PATH_CREATED_PDF)
     os.remove(PATH_CREATED_HTML)
-    print(f"""
-        File created at:
-        PDF:  {PATH_CREATED_HTML}
-        """)
+    print(f"File created at:\nPDF:  {PATH_CREATED_PDF}")
 
 
 #user_data = ""

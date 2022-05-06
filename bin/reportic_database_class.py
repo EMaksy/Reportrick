@@ -195,6 +195,6 @@ class Database():
         try:
 
             self.connection.close()
-            print("Database closed")
+            #print("Database closed")
         except:
             print("Database was not closed")

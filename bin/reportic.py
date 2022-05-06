@@ -1,5 +1,5 @@
 import argparse
-from calendar import calendar
+
 import logging
 from logging.config import dictConfig
 import sys
@@ -7,8 +7,6 @@ import datetime
 from datetime import date
 import time
 import os
-from unicodedata import category
-
 
 import reportic_database_class
 import reportic_generate
@@ -51,12 +49,12 @@ class bcolors:
 
 
 # command list
-CMD_LIST = ["Add new Entry",
-            "Change KW or Year",
-            "Current Workreport",
-            "Export Workreport",
-            "Configurate User",
-            "Exit the programm",
+CMD_LIST = ["Add new entry",
+            "Change calendar week or the year",
+            "Show work report",
+            "Export work report",
+            "Configure user data",
+            "Exit the program",
             ]
 
 CATEGORY_LIST = ["GREEN", "AMBER", "RED", "MEETING"]
@@ -157,17 +155,17 @@ def parsecli(cliargs=None) -> argparse.Namespace:
 
 def cmd_add(args):
     """
+    Add an entry to the current workreport
+    The given args object contains the Category and the Entry which sould be added to the database.
     """
-    # time.sleep(220222)
     log.debug("add selected")
     CATEGORY_LIST
-
-    # get time and kw
+    print(args)
     if args.category in CATEGORY_LIST:
         date_obj, date_formatted, calender_week = get_time_strings()
         log.debug(
             f" {args.category}, {args.entry}, Date2: {date_formatted} CalenderWeekNumber: {calender_week}")
-        # database handling
+        # Opens the database and add adds the entry
         sql_database = reportic_database_class.Database(DATABASEPATH)
         sql_database.set_entry_table(
             args.category, args.entry, calender_week, date_formatted)
@@ -227,9 +225,10 @@ def cli_menue() -> bool:
     log.debug("cli_menue() was executed")
     current_time, date, calendar_week = get_time_strings()
     # check if its day or evening
-    print(f"Good {check_day_evening(current_time)}")
-    print(f"Today is {date}")
-    print(f"We have the {calendar_week} KW")
+
+    print(
+        f"Good {check_day_evening(current_time)}\nToday is {date}\nCalendar Week: {calendar_week}\n")
+
     cli_commands_sub_menue()
     # run user input looop
     cli_menue_interface()
@@ -244,7 +243,7 @@ def cli_menue_interface():
     while keep_going == True:
         menue_selector_number = input("Choose an option: ")
         if menue_selector_number == "6":
-            # exit the programm
+            # exit the program
             clean_console()
             quit()
         if menue_selector_number == "5":
@@ -276,12 +275,8 @@ def cli_generate_html_or_pdf():
     # get user data for function call
     while True:
 
-        user_choice = input("""
-                          Input which file format should be generated?
-                          1:HTML
-                          2:PDF
-                          3:HTML and PDF
-                          """)
+        user_choice = input(
+            "Input which file format should be generated?\n1:HTML\n2:PDF\n3:HTML and PDF\n4:Text\n")
         if user_choice == "1" or user_choice == "HTML":
             reportic_generate.generate_html(list_meetings_enries, list_green_entries, list_amber_entries,
                                             list_red_entries, list_team_data, list_user_data, list_time_data)
@@ -293,6 +288,8 @@ def cli_generate_html_or_pdf():
         if user_choice == "3" or user_choice == "HTML and PDF":
             reportic_generate.generate_html_and_pdf(list_meetings_enries, list_green_entries, list_amber_entries,
                                                     list_red_entries, list_team_data, list_user_data, list_time_data)
+            break
+        if user_choice == "4" or user_choice == "TEXT":
             break
         else:
             print("Sorry wrong input")
@@ -342,11 +339,8 @@ def cli_menue_config__user_output():
     first_name, last_name, team_name = reportic_database_class.Database.get_user_table(
         sql_database)
 
-    print(f"""
-          Current first Name: {first_name}
-          Current last  Name: {last_name}
-          Current Team  Name: {team_name}
-          """)
+    print(
+        f"Current first Name: {first_name}\nCurrent last  Name: {last_name}\nCurrent Team  Name: {team_name}\n")
 
 
 def cli_menue_config_user():
@@ -447,13 +441,9 @@ def cli_menue_return():
 
 
 def cli_menue_return_workreport():
+    text_options = "Enter 'b' to return to main menue\nPress 'e' to exit\nPress 'd' to delete an entry\n"
     while True:
-        return_to_main_menue = input(
-            """
-            Enter 'b' to return to main menue
-            Press 'e' to exit
-            Press 'd' to delete an entry
-            """)
+        return_to_main_menue = input(text_options)
         if return_to_main_menue == "b":
             # clean and return to main menue
             cli_return_to_cli_menue()
@@ -509,7 +499,7 @@ def choose_category():
         category_counter += 1
 
     category_selector = input(
-        f"Chooose an option from 1 to {category_counter-1}  ")
+        f"Choose an option between 1 to {category_counter-1} ")
     return CATEGORY_LIST[int(category_selector)-1]
 
 
@@ -517,15 +507,10 @@ def cli_add_entry():
     """Add new entry to the current Calender Week to the database"""
 
     clean_console()
-    print("""
-          Add new entry to the work report
-          """)
-    entry_text = input("Add new Entry: ")
-
+    print("Add new entry to the work report")
+    entry_text = input("Entry: ")
     category = choose_category()
-
     print(f"Entry: {entry_text}   Category: {category}")
-
     # get time and kw
     date_obj, date_formatted, calender_week = get_time_strings()
     log.debug(
