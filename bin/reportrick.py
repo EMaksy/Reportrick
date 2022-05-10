@@ -111,19 +111,15 @@ def parsecli(cliargs=None) -> argparse.Namespace:
                         version='%(prog)s ' + __version__
                         )
 
-    # Add sub cmd
-   # subparser
+    # Add a new sub command with addiotan arguments "ADD a new entry by category"
     subparsers = parser.add_subparsers(help='Available sub commands')
-    # add cmd
-
     parser_add = subparsers.add_parser(
         "add", help="adds a new entry to your day")
     parser_add.set_defaults(func=cmd_add)
     parser_add.add_argument(
-        "category", type=str, help="Add Category [red, amber, green, meeting]")
-
+        "category", type=str, help="Choose a Category [red, amber, green, meeting] in which the entry needs to be added")
     parser_add.add_argument(
-        "entry", type=str, help="Add entry which describes the activity")
+        "entry", type=str, help="Add a new entry which describes the activity")
 
     args = parser.parse_args(args=cliargs)
     # Setup logging and the log level according to the "-v" option
@@ -139,9 +135,6 @@ def parsecli(cliargs=None) -> argparse.Namespace:
             create_database_dir()
             create_database()
         cli_menue()
-
-    # parser.print_help()
-    # raise MissingSubCommand("Expected subcommand")
 
     # Setup logging and the log level according to the "-v" option
     dictConfig(DEFAULT_LOGGING_DICT)
