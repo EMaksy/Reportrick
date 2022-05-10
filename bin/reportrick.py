@@ -1,5 +1,4 @@
 import argparse
-
 import logging
 from logging.config import dictConfig
 import sys
@@ -7,9 +6,8 @@ import datetime
 from datetime import date
 import time
 import os
-
-import reportic_database_class
-import reportic_generate
+import reportrick_database_class
+import reportrick_generate
 
 # GLOBALS
 __version__ = "0.1.0"
@@ -17,7 +15,7 @@ __author__ = "Eugen Maksymenko <eugen.maksymenko@gmx.net>"
 # relative dir for the database
 relative_path_to_project = (f"{os.path.dirname(__file__)}/..")
 file_dir_database = "/database"
-relative_file = "/reportic_database.sqlite"
+relative_file = "/reportrick_database.sqlite"
 DATABASEPATH = relative_path_to_project + file_dir_database + relative_file
 # DATE
 YEAR = str(date.today().year)
@@ -166,7 +164,7 @@ def cmd_add(args):
         log.debug(
             f" {args.category}, {args.entry}, Date2: {date_formatted} CalenderWeekNumber: {calender_week}")
         # Opens the database and add adds the entry
-        sql_database = reportic_database_class.Database(DATABASEPATH)
+        sql_database = reportrick_database_class.Database(DATABASEPATH)
         sql_database.set_entry_table(
             args.category, args.entry, calender_week, date_formatted)
     else:
@@ -177,12 +175,12 @@ def create_database():
     """Create empty database"""
     log.debug("create_database()")
     sql_data = None
-    sql_database = reportic_database_class.Database(DATABASEPATH, sql_data)
+    sql_database = reportrick_database_class.Database(DATABASEPATH, sql_data)
     # sql_database.close
 
 
 def create_database_dir():
-    """Create a relative directory for the reportic database"""
+    """Create a relative directory for the reportrick database"""
     # log.debug(DATABASEPATH)
     try:
         os.mkdir(f"../{file_dir_database}")
@@ -236,34 +234,36 @@ def cli_menue() -> bool:
 
 
 def cli_menue_interface():
-    """Loop for user interface"""
+    """Handles the user interaction with the command line menu"""
+
     log.debug("cli_menue_interface() was executed")
-    keep_going = True
-    # print(YEAR, CALENDER_WEEK)
-    while keep_going == True:
+    while True:
         menue_selector_number = input("Choose an option: ")
         if menue_selector_number == "6":
-            # exit the program
+            # Ends the programm
             clean_console()
             quit()
         if menue_selector_number == "5":
+            # Configuration of the user
             clean_console()
             cli_menue_config_user()
 
         if menue_selector_number == "4":
+            # Creates the report in the required format
             clean_console()
             cli_generate_html_or_pdf()
             cli_menue_return()
 
         if menue_selector_number == "3":
-            # list all week entries
+            # List all entries for this week
             cli_week_report()
         if menue_selector_number == "2":
+            # Changes the current year and calenderweek. Also returns back to the main menu
             clean_console()
             cli_change_global_date()
             cli_menue_return()
         if menue_selector_number == "1":
-            # list all week entries
+            # Adds new entries to database
             clean_console()
             cli_add_entry()
 
@@ -278,16 +278,16 @@ def cli_generate_html_or_pdf():
         user_choice = input(
             "Input which file format should be generated?\n1:HTML\n2:PDF\n3:HTML and PDF\n4:Text\n")
         if user_choice == "1" or user_choice == "HTML":
-            reportic_generate.generate_html(list_meetings_enries, list_green_entries, list_amber_entries,
-                                            list_red_entries, list_team_data, list_user_data, list_time_data)
+            reportrick_generate.generate_html(list_meetings_enries, list_green_entries, list_amber_entries,
+                                              list_red_entries, list_team_data, list_user_data, list_time_data)
             break
         if user_choice == "2" or user_choice == "PDF":
-            reportic_generate.generate_pdf(list_meetings_enries, list_green_entries, list_amber_entries,
-                                           list_red_entries, list_team_data, list_user_data, list_time_data)
+            reportrick_generate.generate_pdf(list_meetings_enries, list_green_entries, list_amber_entries,
+                                             list_red_entries, list_team_data, list_user_data, list_time_data)
             break
         if user_choice == "3" or user_choice == "HTML and PDF":
-            reportic_generate.generate_html_and_pdf(list_meetings_enries, list_green_entries, list_amber_entries,
-                                                    list_red_entries, list_team_data, list_user_data, list_time_data)
+            reportrick_generate.generate_html_and_pdf(list_meetings_enries, list_green_entries, list_amber_entries,
+                                                      list_red_entries, list_team_data, list_user_data, list_time_data)
             break
         if user_choice == "4" or user_choice == "TEXT":
             break
@@ -298,7 +298,7 @@ def cli_generate_html_or_pdf():
 def collect_workreport_data() -> list:
     """ Collect all required user data for workreport"""
 
-    sql_data = reportic_database_class.Database(DATABASEPATH)
+    sql_data = reportrick_database_class.Database(DATABASEPATH)
     first_name, last_name, team_name = sql_data.get_user_table()
     global YEAR, CALENDER_WEEK
     current_calender_week = CALENDER_WEEK
@@ -335,8 +335,8 @@ def cli_menue_config__user_output():
     """
     Output the current first/last name and team on the console
     """
-    sql_database = reportic_database_class.Database(DATABASEPATH)
-    first_name, last_name, team_name = reportic_database_class.Database.get_user_table(
+    sql_database = reportrick_database_class.Database(DATABASEPATH)
+    first_name, last_name, team_name = reportrick_database_class.Database.get_user_table(
         sql_database)
 
     print(
@@ -346,7 +346,7 @@ def cli_menue_config__user_output():
 def cli_menue_config_user():
     """User input of the config name"""
     # get current user data from database
-    sql_database = reportic_database_class.Database(DATABASEPATH)
+    sql_database = reportrick_database_class.Database(DATABASEPATH)
     cli_menue_config__user_output()
 
     first_name = input("Enter your first name: ")
@@ -393,7 +393,7 @@ def format_list_and_return(entry_list) -> list:
 
 def cli_week_report():
     """List current workreport"""
-    sql_data = reportic_database_class.Database(DATABASEPATH)
+    sql_data = reportrick_database_class.Database(DATABASEPATH)
     first_name, last_name, team_name = sql_data.get_user_table()
 
     global YEAR, CALENDER_WEEK
@@ -455,14 +455,14 @@ def cli_menue_return_workreport():
             print(category)
             year = YEAR
             kw = CALENDER_WEEK
-            sql_data = reportic_database_class.Database(DATABASEPATH)
+            sql_data = reportrick_database_class.Database(DATABASEPATH)
             # output all enties
             format_list_print(sql_data.get_entries_text_by_category_week_year(
                 kw, year, category))
             entry_text = input("Input the message that you want to delete  ")
             print(
                 f"Year: {YEAR}, KW:{kw} CATEGORY:{category} entry_txt:{entry_text}")
-            sql_data2 = reportic_database_class.Database(DATABASEPATH)
+            sql_data2 = reportrick_database_class.Database(DATABASEPATH)
             sql_data2.delete_entry_by_text_category_year_kw(
                 category, year, kw, entry_text)
             log.debug(f"Entry {entry_text} was deleted")
@@ -516,7 +516,7 @@ def cli_add_entry():
     log.debug(
         f"Date2: {date_formatted} CalenderWeekNumber: {calender_week}")
     # database handling
-    sql_database = reportic_database_class.Database(DATABASEPATH)
+    sql_database = reportrick_database_class.Database(DATABASEPATH)
     sql_database.set_entry_table(
         category, entry_text, calender_week, date_formatted)
 

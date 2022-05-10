@@ -1,6 +1,6 @@
 import sqlite3
 import string
-import reportic
+import reportrick
 
 
 class Database():
@@ -19,12 +19,12 @@ class Database():
         """
         Create a database by a given path
         """
-        reportic.log.debug(f"{self.path}")
+        reportrick.log.debug(f"{self.path}")
         try:
             self.connection = sqlite3.connect(f"{self.path}")
-            reportic.log.debug("Connection to database true")
+            reportrick.log.debug("Connection to database true")
         except:
-            reportic.log.debug("Connection to database false")
+            reportrick.log.debug("Connection to database false")
             quit()
 
         if self.__create_empty_database() == True:
@@ -79,7 +79,7 @@ class Database():
 
     def set_user_table(self, first_name, last_name, team_name) -> bool:
         # setter sql statements
-        reportic.log.debug(self, first_name, last_name, team_name)
+        reportrick.log.debug(self, first_name, last_name, team_name)
         sql_set_data = f"""
         REPLACE INTO
         user (user_id, first_name, last_name, team_name)
@@ -103,7 +103,7 @@ class Database():
         SELECT  first_name, last_name, team_name FROM user WHERE user_id='1';
         """
         values = self.__sql_cmd(sql_get_user_data)
-        reportic.log.debug(f"SQL DATA: {values}")
+        reportrick.log.debug(f"SQL DATA: {values}")
         values = list(values)
         try:
             first_name, last_name, team_name = values[0][0], values[0][1], values[0][2]

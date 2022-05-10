@@ -1,7 +1,9 @@
-workreport/jinja_workreport.pdf
-workreport/jinja_workreport.html
-database/reportic_database.sqlite
-bin/__pycache__/reportic_database_class.cpython-310.pyc
-bin/__pycache__/reportic_database_class.cpython-310.pyc
-bin/__pycache__/reportic_database_class.cpython-310.pyc
+
+bin/__pycache__/reportic_generate.cpython-310.pyc
+bin/__pycache__/reportrick.cpython-310.pyc
+bin/__pycache__/reportrick_database_class.cpython-310.pyc
+bin/__pycache__/reportrick_generate.cpython-310.pyc
+database/reportrick_database.sqlite
 dist/*
+workreport/jinja_workreport.html
+workreport/jinja_workreport.pdf

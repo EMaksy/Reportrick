@@ -16,7 +16,7 @@ setup(
     description="A CLI Report tool",
     long_description=readme,
     long_description_content_type="text/markdown",
-    url="https://github.com/EMaksy/reportic",
+    url="https://github.com/EMaksy/reportrick",
     packages=find_packages(),
     install_requires=requirements,
     classifiers=[
