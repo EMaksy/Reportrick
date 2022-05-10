@@ -198,9 +198,9 @@ def check_day_evening(current_time_obj):
         return "day"
 
 
-def cli_commands_sub_menue() -> bool:
+def cli_commands_sub_menu() -> bool:
     """Numbers and outputs elements of all CMDS Strings"""
-    log.debug("cli_commands_sub_menue was executed")
+    log.debug("cli_commands_sub_menu was executed")
     cmd_list_counter = 1
     for x in CMD_LIST:
         print(f"{cmd_list_counter}:{x}")
@@ -217,7 +217,7 @@ def cli_menu() -> bool:
     print(
         f"Good {check_day_evening(current_time)}\nToday is {date}\nCalendar Week: {calendar_week}\n")
 
-    cli_commands_sub_menue()
+    cli_commands_sub_menu()
     # run user input looop
     cli_menu_interface()
     return True
@@ -228,37 +228,35 @@ def cli_menu_interface():
 
     log.debug("cli_menu_interface() was executed")
     while True:
-        menue_selector_number = input("Choose an option: ")
-        if menue_selector_number == "6":
+        menu_selector_number = input("Choose an option: ")
+        if menu_selector_number == "6":
             # Ends the programm
             clean_console()
             quit()
-        if menue_selector_number == "5":
+        if menu_selector_number == "5":
             # Configuration of the user
             clean_console()
             cli_menu_config_user()
-
-        if menue_selector_number == "4":
+        if menu_selector_number == "4":
             # Creates the report in the required format
             clean_console()
-            cli_generate_html_or_pdf()
+            cli_generate_report()
             cli_menu_return()
-
-        if menue_selector_number == "3":
+        if menu_selector_number == "3":
             # List all entries for this week
             cli_week_report()
-        if menue_selector_number == "2":
+        if menu_selector_number == "2":
             # Changes the current year and calenderweek. Also returns back to the main menu
             clean_console()
             cli_change_global_date()
             cli_menu_return()
-        if menue_selector_number == "1":
+        if menu_selector_number == "1":
             # Adds new entries to database
             clean_console()
             cli_add_entry()
 
 
-def cli_generate_html_or_pdf():
+def cli_generate_report():
     """Ask user if pdf or html should be created"""
     # collect all data for file generation
     list_meetings_enries, list_green_entries, list_amber_entries, list_red_entries, list_team_data, list_user_data, list_time_data, list_user_data = collect_workreport_data()
@@ -418,28 +416,28 @@ def cli_week_report():
 
 def cli_menu_return():
     while True:
-        return_to_main_menue = input(
-            "Enter 'b' to return to main menue or press 'e' to exit  ")
-        if return_to_main_menue == "b":
-            # clean and return to main menue
+        return_to_main_menu = input(
+            "Enter 'b' to return to main menu or press 'e' to exit  ")
+        if return_to_main_menu == "b":
+            # clean and return to main menu
             cli_return_to_cli_menu()
             break
-        if return_to_main_menue == "e":
+        if return_to_main_menu == "e":
             # clean and end programm
             clean_console()
             quit()
 
 
 def cli_menu_return_workreport():
-    text_options = "Enter 'b' to return to main menue\nPress 'e' to exit\nPress 'd' to delete an entry\n"
+    text_options = "Enter 'b' to return to main menu\nPress 'e' to exit\nPress 'd' to delete an entry\n"
     while True:
-        return_to_main_menue = input(text_options)
-        if return_to_main_menue == "b":
-            # clean and return to main menue
+        return_to_main_menu = input(text_options)
+        if return_to_main_menu == "b":
+            # clean and return to main menu
             cli_return_to_cli_menu()
             break
 
-        if return_to_main_menue == "d":
+        if return_to_main_menu == "d":
             "In which category?"
             category = choose_category()
             print(category)
@@ -458,7 +456,7 @@ def cli_menu_return_workreport():
             log.debug(f"Entry {entry_text} was deleted")
             clean_console()
             cli_week_report()
-        if return_to_main_menue == "e":
+        if return_to_main_menu == "e":
             # clean and end programm
             clean_console()
             quit()
@@ -471,7 +469,7 @@ def clean_console():
 
 
 def cli_return_to_cli_menu():
-    """Return you to the main menue"""
+    """Return you to the main menu"""
     log.debug("cli_return_to_cli_menu() was executed")
     clean_console()
     cli_menu()

@@ -35,9 +35,8 @@ class Database():
 
     def __create_empty_database(self) -> bool:
         """
-        Create tables to given database
-        Tables: team, trainee and entry
-        :param database:  path
+        Create an empty sqlite database
+        Tables: [user,entry]
         """
         create_user_table = """
         CREATE TABLE IF NOT EXISTS user(
@@ -58,7 +57,6 @@ class Database():
         FOREIGN KEY(user_id) REFERENCES user(user_id)
         );
         """
-        # create table
         try:
             self.__sql_cmd(create_user_table)
             self.__sql_cmd(create_entry_table)
