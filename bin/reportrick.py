@@ -130,11 +130,11 @@ def parsecli(cliargs=None) -> argparse.Namespace:
 
     # help for the user when no subcommand was passed
     if "func" not in args:
-        # Create directory and create the dabase if no database exists
+        # Check if database directory exists and start m
         if os.path.exists(DATABASEPATH) != True:
             create_database_dir()
             create_database()
-        cli_menue()
+        cli_menu()
 
     # Setup logging and the log level according to the "-v" option
     dictConfig(DEFAULT_LOGGING_DICT)
@@ -147,11 +147,8 @@ def parsecli(cliargs=None) -> argparse.Namespace:
 def cmd_add(args):
     """
     Add an entry to the current workreport
-    The given args object contains the Category and the Entry which sould be added to the database.
+    The given args object contains the Category and the Entry which sould is added to the database.
     """
-    log.debug("add selected")
-    CATEGORY_LIST
-    print(args)
     if args.category in CATEGORY_LIST:
         date_obj, date_formatted, calender_week = get_time_strings()
         log.debug(
@@ -211,9 +208,9 @@ def cli_commands_sub_menue() -> bool:
     return True
 
 
-def cli_menue() -> bool:
+def cli_menu() -> bool:
     """Display User Interface in the Command Line"""
-    log.debug("cli_menue() was executed")
+    log.debug("cli_menu() was executed")
     current_time, date, calendar_week = get_time_strings()
     # check if its day or evening
 
@@ -222,14 +219,14 @@ def cli_menue() -> bool:
 
     cli_commands_sub_menue()
     # run user input looop
-    cli_menue_interface()
+    cli_menu_interface()
     return True
 
 
-def cli_menue_interface():
+def cli_menu_interface():
     """Handles the user interaction with the command line menu"""
 
-    log.debug("cli_menue_interface() was executed")
+    log.debug("cli_menu_interface() was executed")
     while True:
         menue_selector_number = input("Choose an option: ")
         if menue_selector_number == "6":
@@ -239,13 +236,13 @@ def cli_menue_interface():
         if menue_selector_number == "5":
             # Configuration of the user
             clean_console()
-            cli_menue_config_user()
+            cli_menu_config_user()
 
         if menue_selector_number == "4":
             # Creates the report in the required format
             clean_console()
             cli_generate_html_or_pdf()
-            cli_menue_return()
+            cli_menu_return()
 
         if menue_selector_number == "3":
             # List all entries for this week
@@ -254,7 +251,7 @@ def cli_menue_interface():
             # Changes the current year and calenderweek. Also returns back to the main menu
             clean_console()
             cli_change_global_date()
-            cli_menue_return()
+            cli_menu_return()
         if menue_selector_number == "1":
             # Adds new entries to database
             clean_console()
@@ -324,7 +321,7 @@ def cli_change_global_date():
     print(YEAR, CALENDER_WEEK)
 
 
-def cli_menue_config__user_output():
+def cli_menu_config__user_output():
     """
     Output the current first/last name and team on the console
     """
@@ -336,11 +333,11 @@ def cli_menue_config__user_output():
         f"Current first Name: {first_name}\nCurrent last  Name: {last_name}\nCurrent Team  Name: {team_name}\n")
 
 
-def cli_menue_config_user():
+def cli_menu_config_user():
     """User input of the config name"""
     # get current user data from database
     sql_database = reportrick_database_class.Database(DATABASEPATH)
-    cli_menue_config__user_output()
+    cli_menu_config__user_output()
 
     first_name = input("Enter your first name: ")
     last_name = input("Enter your last name: ")
@@ -349,15 +346,15 @@ def cli_menue_config_user():
         sql_database.set_user_table(first_name, last_name, team_name)
         print("Changes have been made to the database")
         clean_console()
-        cli_menue_config__user_output()
+        cli_menu_config__user_output()
 
     except Exception as e:
         log.debug(f"""
                 Error message: {e}
-                cli_menue_config_user()
+                cli_menu_config_user()
                 Changes have not been adopted to the database!
                 """)
-    cli_menue_return()
+    cli_menu_return()
 
 
 def format_list_print(entry_list):
@@ -416,16 +413,16 @@ def cli_week_report():
     format_list_print(list_amber_entries)
     print(f"{bcolors.OKBLUE}Meetings:{bcolors.ENDC}")
     format_list_print(list_meetings_enries)
-    cli_menue_return_workreport()
+    cli_menu_return_workreport()
 
 
-def cli_menue_return():
+def cli_menu_return():
     while True:
         return_to_main_menue = input(
             "Enter 'b' to return to main menue or press 'e' to exit  ")
         if return_to_main_menue == "b":
             # clean and return to main menue
-            cli_return_to_cli_menue()
+            cli_return_to_cli_menu()
             break
         if return_to_main_menue == "e":
             # clean and end programm
@@ -433,13 +430,13 @@ def cli_menue_return():
             quit()
 
 
-def cli_menue_return_workreport():
+def cli_menu_return_workreport():
     text_options = "Enter 'b' to return to main menue\nPress 'e' to exit\nPress 'd' to delete an entry\n"
     while True:
         return_to_main_menue = input(text_options)
         if return_to_main_menue == "b":
             # clean and return to main menue
-            cli_return_to_cli_menue()
+            cli_return_to_cli_menu()
             break
 
         if return_to_main_menue == "d":
@@ -473,11 +470,11 @@ def clean_console():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def cli_return_to_cli_menue():
+def cli_return_to_cli_menu():
     """Return you to the main menue"""
-    log.debug("cli_return_to_cli_menue() was executed")
+    log.debug("cli_return_to_cli_menu() was executed")
     clean_console()
-    cli_menue()
+    cli_menu()
 
 
 def show_entries_by_category(category):
@@ -513,7 +510,7 @@ def cli_add_entry():
     sql_database.set_entry_table(
         category, entry_text, calender_week, date_formatted)
 
-    cli_menue_return()
+    cli_menu_return()
 
 
 def cli_delete_entry_current_week():
@@ -527,15 +524,12 @@ def main(cliargs=None) -> int:
     """
     # clean_console()
     try:
-        args = parsecli(cliargs)
-        # do some useful things here...
-        # If everything was good, return without error:
-        args.func(args)
+        parsecli(cliargs)
         return 0
 
     except MissingSubCommand as error:
         log.fatal(error)
-        return 888
+        return 1
 
 
 if __name__ == "__main__":
