@@ -291,12 +291,9 @@ def collect_workreport_data() -> list:
     global YEAR, CALENDER_WEEK
     current_calender_week = CALENDER_WEEK
     current_year = YEAR
-
     list_time_data = [YEAR, CALENDER_WEEK]
-
     list_user_data = [first_name, last_name]
     list_team_data = [team_name]
-
     list_meetings_enries = format_list_and_return(list(sql_data.get_entries_meeting_week_year(
         current_calender_week, current_year)))
     list_green_entries = format_list_and_return(list(sql_data.get_entries_green_week_year(
@@ -305,7 +302,6 @@ def collect_workreport_data() -> list:
         current_calender_week, current_year)))
     list_red_entries = format_list_and_return(list(sql_data.get_entries_red_week_year(
         current_calender_week, current_year)))
-
     return list_meetings_enries, list_green_entries, list_amber_entries, list_red_entries, list_team_data, list_user_data, list_time_data, list_user_data
 
 
@@ -326,7 +322,6 @@ def cli_menu_config__user_output():
     sql_database = reportrick_database_class.Database(DATABASEPATH)
     first_name, last_name, team_name = reportrick_database_class.Database.get_user_table(
         sql_database)
-
     print(
         f"Current first Name: {first_name}\nCurrent last  Name: {last_name}\nCurrent Team  Name: {team_name}\n")
 
@@ -336,7 +331,6 @@ def cli_menu_config_user():
     # get current user data from database
     sql_database = reportrick_database_class.Database(DATABASEPATH)
     cli_menu_config__user_output()
-
     first_name = input("Enter your first name: ")
     last_name = input("Enter your last name: ")
     team_name = input("Enter your Team name: ")
@@ -383,11 +377,9 @@ def cli_week_report():
     """List current workreport"""
     sql_data = reportrick_database_class.Database(DATABASEPATH)
     first_name, last_name, team_name = sql_data.get_user_table()
-
     global YEAR, CALENDER_WEEK
     current_calender_week = CALENDER_WEEK
     current_year = YEAR
-
     list_green_entries = list(sql_data.get_entries_green_week_year(
         current_calender_week, current_year))
     list_red_entries = list(sql_data.get_entries_red_week_year(
@@ -396,7 +388,6 @@ def cli_week_report():
         current_calender_week, current_year))
     list_meetings_enries = list(sql_data.get_entries_meeting_week_year(
         current_calender_week, current_year))
-
     # clean console
     log.debug("cli_week_report() was executed")
     clean_console()
