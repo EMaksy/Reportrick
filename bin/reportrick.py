@@ -6,6 +6,9 @@ import datetime
 from datetime import date
 import time
 import os
+
+from MySQLdb import DATE
+from pyparsing import And
 import reportrick_database_class
 import reportrick_generate
 
@@ -20,6 +23,7 @@ DATABASEPATH = relative_path_to_project + file_dir_database + relative_file
 # DATE
 YEAR = str(date.today().year)
 CALENDER_WEEK = str(datetime.date.today().isocalendar()[1])
+WORK_REPORT_DATE_CHANGED = False
 
 
 class MissingSubCommand(ValueError):
@@ -213,9 +217,16 @@ def cli_menu() -> bool:
     log.debug("cli_menu() was executed")
     current_time, date, calendar_week = get_time_strings()
     # check if its day or evening
-
-    print(
-        f"Good {check_day_evening(current_time)}\nToday is {date}\nCalendar Week: {calendar_week}\n")
+    if WORK_REPORT_DATE_CHANGED == False:
+        {
+            print(
+                f"Good {check_day_evening(current_time)}\nToday is {date}\nCalendar Week: {calendar_week}\n")
+        }
+    else:
+        {
+            print(
+                f"Good {check_day_evening(current_time)}\nYear of Report changed to {YEAR}\nCalendar Week: {CALENDER_WEEK}\n")
+        }
 
     cli_commands_sub_menu()
     # run user input looop
@@ -307,15 +318,20 @@ def collect_workreport_data() -> list:
 
 def cli_change_global_date():
     """Change Dates of an workreport"""
-    global YEAR, CALENDER_WEEK
+    global YEAR, CALENDER_WEEK, WORK_REPORT_DATE_CHANGED
     YEAR = input("Enter the year for the workreport  ")
     CALENDER_WEEK = input("Please input the CALENDER WEEK  ")
     print(
         f"Year was changed to {YEAR} and Calender Week was changed to {CALENDER_WEEK}")
     print(YEAR, CALENDER_WEEK)
 
+    if YEAR == str(date.today().year) and CALENDER_WEEK == str(datetime.date.today().isocalendar()[1]):
+        WORK_REPORT_DATE_CHANGED = False
+    else:
+        WORK_REPORT_DATE_CHANGED = True
 
-def cli_menu_config__user_output():
+
+def cli_menu_config_user_output():
     """
     Output the current first/last name and team on the console
     """
@@ -330,15 +346,15 @@ def cli_menu_config_user():
     """User input of the config name"""
     # get current user data from database
     sql_database = reportrick_database_class.Database(DATABASEPATH)
-    cli_menu_config__user_output()
+    cli_menu_config_user_output()
     first_name = input("Enter your first name: ")
     last_name = input("Enter your last name: ")
     team_name = input("Enter your Team name: ")
     try:
         sql_database.set_user_table(first_name, last_name, team_name)
-        print("Changes have been made to the database")
+        log.debug("Changes have been made to the database")
         clean_console()
-        cli_menu_config__user_output()
+        cli_menu_config_user_output()
 
     except Exception as e:
         log.debug(f"""
@@ -448,7 +464,6 @@ def cli_menu_return_workreport():
             clean_console()
             cli_week_report()
         if return_to_main_menu == "e":
-            # clean and end programm
             clean_console()
             quit()
 
