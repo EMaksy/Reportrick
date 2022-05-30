@@ -230,17 +230,27 @@ def cli_menu() -> bool:
     """Display User Interface in the Command Line"""
     log.debug("cli_menu() was executed")
     current_time, date, calendar_week = get_time_strings()
+    # get user data if configured
+    sql_database = open_database()
+    first_name, last_name, team_name = reportrick_database_class.Database.get_user_table(
+        sql_database)
     # check if its day or evening
     if WORK_REPORT_DATE_CHANGED == False:
-        {
+        if first_name == "None" and last_name == "None" and team_name == "None":
             print(
                 f"Good {check_day_evening(current_time)}\nToday is {date}\nCalendar Week: {calendar_week}\n")
-        }
+        else:
+            print(
+                f"Good {check_day_evening(current_time)} {first_name} {last_name}\nToday is {date}\nCalendar Week: {calendar_week}\n")
+
     else:
-        {
+        if first_name == "None" and last_name == "None" and team_name == "None":
             print(
                 f"Good {check_day_evening(current_time)}\nYear of Report changed to {YEAR}\nCalendar Week: {CALENDER_WEEK}\n")
-        }
+        else:
+
+            print(
+                f"Good {check_day_evening(current_time)} {first_name} {last_name}\nYear of Report changed to {YEAR}\nCalendar Week: {CALENDER_WEEK}\n")
 
     cli_commands_sub_menu()
     # run user input looop
@@ -350,7 +360,7 @@ def cli_menu_config_user_output() -> bool:
     Output the current first/last name and team on the console
     """
     try:
-        sql_database = reportrick_database_class.Database(DATABASEPATH)
+        sql_database = open_database()
         first_name, last_name, team_name = reportrick_database_class.Database.get_user_table(
             sql_database)
         print(
