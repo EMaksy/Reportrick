@@ -6,8 +6,8 @@ import weasyprint
 
 PATH_TEMPLATE = "./template"
 TEMPLATE_NAME = "layout_workreport.html"
-PATH_CREATED_HTML = "workreport/jinja_workreport.html"
-PATH_CREATED_PDF = "workreport/jinja_workreport.pdf"
+PATH_CREATED_HTML = "work_report/jinja_workreport.html"
+PATH_CREATED_PDF = "work_report/jinja_workreport.pdf"
 CREATED_PDF_NAME = "test-jinja.pdf"
 CREATED_HTML_NAME = "test-jinja.html"
 

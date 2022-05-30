@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Mulish&display=swap");
+
+        html,
+        body {
+            height: 297mm;
+            width: 210mm;
+            font-family: 'Mulish', sans-serif;
+        }
+
+        .container {
+            height: 100%;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container .box {
+            text-align: center;
+            font-size: 36px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .container .box header {
+            height: auto;
+        }
+
+        header .header_content {
+            display: flex;
+            justify-content: space-between;
+            text-align: left;
+            width: 90%;
+        }
+
+        header .header_content_person_info {
+            text-align: left;
+        }
+
+        header p {
+            margin: 0px;
+        }
+
+        header table {
+            font-size: medium;
+        }
+
+        header table td {
+            padding-left: 10px;
+        }
+
+        .container .box article {
+            flex: 1;
+        }
+
+        .container .box footer {
+            height: 300px;
+        }
+
+        .article_report_content_container {
+            margin: 40px 0px 100px 0px;
+            font-size: x-large;
+        }
+
+        .article_report_content_container .article_report_title {
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .article_report_content_container .article_report_title .title-category {
+            font-size: larger;
+            border-bottom: 1px solid gray;
+        }
+
+        .article_report_content_container .article_report_title .title-entry {
+            font-size: larger;
+            border-bottom: 1px solid gray;
+        }
+
+        .article_report_content_container .article_report_category_red,
+        .article_report_content_container .article_report_title,
+        .article_report_content_container .article_report_category_green,
+        .article_report_content_container .article_report_category_meeting,
+        .article_report_content_container .article_report_category_amber {
+            display: flex;
+            flex-direction: row;
+            margin-bottom: 20px;
+        }
+
+        .article_report_content_container .article_report_category_red p,
+        .article_report_content_container .article_report_title p,
+        .article_report_content_container .article_report_category_green p,
+        .article_report_content_container .article_report_category_meeting p,
+        .article_report_content_container .article_report_category_amber p {
+            margin: 0px;
+        }
+
+        .article_report_content_container .article_report_category_red .category,
+        .article_report_content_container .article_report_title .category,
+        .article_report_content_container .article_report_title .title-category,
+        .article_report_content_container .article_report_category_red .category-red,
+        .article_report_content_container .article_report_title .category-red,
+        .article_report_content_container .article_report_category_red .category-amber,
+        .article_report_content_container .article_report_title .category-amber,
+        .article_report_content_container .article_report_category_red .category-green,
+        .article_report_content_container .article_report_title .category-green,
+        .article_report_content_container .article_report_category_red .category-meeting,
+        .article_report_content_container .article_report_title .category-meeting,
+        .article_report_content_container .article_report_category_green .category,
+        .article_report_content_container .article_report_category_green .article_report_title .title-category,
+        .article_report_content_container .article_report_title .article_report_category_green .title-category,
+        .article_report_content_container .article_report_category_green .category-red,
+        .article_report_content_container .article_report_category_green .category-amber,
+        .article_report_content_container .article_report_category_green .category-green,
+        .article_report_content_container .article_report_category_green .category-meeting,
+        .article_report_content_container .article_report_category_meeting .category,
+        .article_report_content_container .article_report_category_meeting .article_report_title .title-category,
+        .article_report_content_container .article_report_title .article_report_category_meeting .title-category,
+        .article_report_content_container .article_report_category_meeting .category-red,
+        .article_report_content_container .article_report_category_meeting .category-amber,
+        .article_report_content_container .article_report_category_meeting .category-green,
+        .article_report_content_container .article_report_category_meeting .category-meeting,
+        .article_report_content_container .article_report_category_amber .category,
+        .article_report_content_container .article_report_category_amber .article_report_title .title-category,
+        .article_report_content_container .article_report_title .article_report_category_amber .title-category,
+        .article_report_content_container .article_report_category_amber .category-red,
+        .article_report_content_container .article_report_category_amber .category-amber,
+        .article_report_content_container .article_report_category_amber .category-green,
+        .article_report_content_container .article_report_category_amber .category-meeting {
+            text-align: left;
+            width: 30%;
+            font-weight: bold;
+        }
+
+        .article_report_content_container .article_report_category_red .entry,
+        .article_report_content_container .article_report_title .entry,
+        .article_report_content_container .article_report_title .title-entry,
+        .article_report_content_container .article_report_category_green .entry,
+        .article_report_content_container .article_report_category_green .article_report_title .title-entry,
+        .article_report_content_container .article_report_title .article_report_category_green .title-entry,
+        .article_report_content_container .article_report_category_meeting .entry,
+        .article_report_content_container .article_report_category_meeting .article_report_title .title-entry,
+        .article_report_content_container .article_report_title .article_report_category_meeting .title-entry,
+        .article_report_content_container .article_report_category_amber .entry,
+        .article_report_content_container .article_report_category_amber .article_report_title .title-entry,
+        .article_report_content_container .article_report_title .article_report_category_amber .title-entry {
+            text-align: left;
+            width: 70%;
+        }
+
+        .article_report_content_container .article_report_category_red .category-red,
+        .article_report_content_container .article_report_title .category-red,
+        .article_report_content_container .article_report_category_green .category-red,
+        .article_report_content_container .article_report_category_meeting .category-red,
+        .article_report_content_container .article_report_category_amber .category-red {
+            color: red;
+        }
+
+        .article_report_content_container .article_report_category_red .category-amber,
+        .article_report_content_container .article_report_title .category-amber,
+        .article_report_content_container .article_report_category_green .category-amber,
+        .article_report_content_container .article_report_category_meeting .category-amber,
+        .article_report_content_container .article_report_category_amber .category-amber {
+            color: #F6BE00;
+        }
+
+        .article_report_content_container .article_report_category_red .category-green,
+        .article_report_content_container .article_report_title .category-green,
+        .article_report_content_container .article_report_category_green .category-green,
+        .article_report_content_container .article_report_category_meeting .category-green,
+        .article_report_content_container .article_report_category_amber .category-green {
+            color: green;
+        }
+
+        .article_report_content_container .article_report_category_red .category-meeting,
+        .article_report_content_container .article_report_title .category-meeting,
+        .article_report_content_container .article_report_category_green .category-meeting,
+        .article_report_content_container .article_report_category_meeting .category-meeting,
+        .article_report_content_container .article_report_category_amber .category-meeting {
+            color: darkblue;
+        }
+
+        footer {
+            padding: 10px 10px 10px 0px;
+        }
+
+        footer table {
+            width: 80%;
+            text-align: left;
+        }
+
+        footer table th {
+            width: 35%;
+        }
+
+        footer table td {
+            border-bottom: 1px solid black;
+        }
+
+        /*# sourceMappingURL=style.css.map */
+    </style>
+    <title>WORKREPORT</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="box">
+            <header>
+                <h2>WEEKLY WORK REPORT</h1>
+                    <div class='header_content'>
+                        <div class="header_content_person_info">
+                            <table>
+                                <tr>
+                                    <th>Employee name:</th>
+                                    <td>Eugen Maksymenko</td>
+                                </tr>
+                                <tr>
+                                    <th>Department:</th>
+                                    <td> 
+                                        SHAP
+                                        </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="header_content_date">
+                            <table>
+                                <tr>
+                                    <th>Year:</th>
+                                    <td> 2022</td>
+                                </tr>
+                                <tr>
+                                    <th>Calender Week:</th>
+                                    <td> 22</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+            </header>
+            <article>
+                <div class="article_report_content_container">
+                    <div class="article_report_title">
+                        <div class="title-category">
+                            <p>Category</p>
+                        </div>
+                        <div class="title-entry">
+                            <p>Entry</p>
+                        </div>
+                    </div>
+
+                    <div class="article_report_category_red">
+                        <div class="category-red">
+                            <p>RED:</p>
+                        </div>
+                        <div class="entry">
+                            
+                        </div>
+
+
+                    </div>
+                    <div class="article_report_category_amber">
+                        <div class="category-amber">
+                            <p>AMBER:</p>
+                        </div>
+                        <div class="entry">
+                            
+                        </div>
+                    </div>
+                    <div class="article_report_category_green">
+                        <div class="category-green">
+                            <p>GREEN</p>
+                        </div>
+                        <div class="entry">
+                            
+                        </div>
+                    </div>
+                    <div class="article_report_category_meeting">
+                        <div class="category-meeting">
+                            <p>Meeting</p>
+                        </div>
+                        <div class="entry">
+                            
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <footer>
+                <div class="footer_data">
+                    <table class="footer-table">
+                        <tr>
+                            <th>Signature: </th>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+            </footer>
+        </div>
+    </div>
+    </div>
+</body>
+
+</html>
