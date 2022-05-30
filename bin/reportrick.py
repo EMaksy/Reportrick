@@ -116,8 +116,8 @@ def cmd_add(args):
 
 def cmd_list(args):
     """ Output current workr report """
-    print("Hello")
     log.debug("cmd_list")
+    cli_week_report()
 
 
 def parsecli(cliargs=None) -> argparse.Namespace:
@@ -345,22 +345,30 @@ def cli_change_global_date():
         WORK_REPORT_DATE_CHANGED = True
 
 
-def cli_menu_config_user_output():
+def cli_menu_config_user_output() -> bool:
     """
     Output the current first/last name and team on the console
     """
-    sql_database = reportrick_database_class.Database(DATABASEPATH)
-    first_name, last_name, team_name = reportrick_database_class.Database.get_user_table(
-        sql_database)
-    print(
-        f"Current first Name: {first_name}\nCurrent last  Name: {last_name}\nCurrent Team  Name: {team_name}\n")
+    try:
+        sql_database = reportrick_database_class.Database(DATABASEPATH)
+        first_name, last_name, team_name = reportrick_database_class.Database.get_user_table(
+            sql_database)
+        print(
+            f"Current first Name: {first_name}\nCurrent last  Name: {last_name}\nCurrent Team  Name: {team_name}\n")
+        if first_name == "None" and last_name == "None" and team_name == "None":
+            return False
+        else:
+            return True
+    except Exception as e:
+        log.debug(f"""
+                    Error message: {e}
+                    cli_menu_config_user_output()
+                    No user interaction was executed
+                    """)
+        return False
 
 
-def cli_menu_config_user():
-    """User input of the config name"""
-    # get current user data from database
-    sql_database = reportrick_database_class.Database(DATABASEPATH)
-    cli_menu_config_user_output()
+def user_data_config(sql_database):
     first_name = input("Enter your first name: ")
     last_name = input("Enter your last name: ")
     team_name = input("Enter your Team name: ")
@@ -376,7 +384,42 @@ def cli_menu_config_user():
                 cli_menu_config_user()
                 Changes have not been adopted to the database!
                 """)
-    cli_menu_return()
+
+
+def user_delete_entry():
+    "In which category?"
+    category = choose_category()
+    print(category)
+    year = YEAR
+    kw = CALENDER_WEEK
+    sql_data = reportrick_database_class.Database(DATABASEPATH)
+    # output all enties
+    format_list_print(sql_data.get_entries_text_by_category_week_year(
+        kw, year, category))
+    entry_text = input("Input the message that you want to delete  ")
+    print(
+        f"Year: {YEAR}, KW:{kw} CATEGORY:{category} entry_txt:{entry_text}")
+    sql_data2 = reportrick_database_class.Database(DATABASEPATH)
+    sql_data2.delete_entry_by_text_category_year_kw(
+        category, year, kw, entry_text)
+    log.debug(f"Entry {entry_text} was deleted")
+    clean_console()
+    cli_week_report()
+
+
+def open_database():
+    sql_database = reportrick_database_class.Database(DATABASEPATH)
+    return sql_database
+
+
+def cli_menu_config_user():
+    """User input of the config name"""
+    # get current user data from database
+    sql_database = open_database()
+    config_exist = cli_menu_config_user_output()
+    if config_exist == False:
+        user_data_config(sql_database)
+    cli_menu_return_user_config()
 
 
 def format_list_print(entry_list):
@@ -437,47 +480,46 @@ def cli_week_report():
 
 def cli_menu_return():
     while True:
-        return_to_main_menu = input(
-            "Enter 'b' to return to main menu or press 'e' to exit  ")
-        if return_to_main_menu == "b":
+        user_input = input(
+            "Enter 'r' to return to main menu\nEnter 'e' to exit\n")
+        if user_input == "r":
             # clean and return to main menu
             cli_return_to_cli_menu()
             break
-        if return_to_main_menu == "e":
+        if user_input == "e":
+            # clean and end programm
+            clean_console()
+            quit()
+
+
+def cli_menu_return_user_config():
+    while True:
+        user_input = input(
+            "Enter 'c' to reconfigurate user data \nEnter 'e' to exit\nEnter 'r' to return to the main menu\n")
+        if user_input == "r":
+            # clean and return to main menu
+            cli_return_to_cli_menu()
+            break
+        if user_input == "c":
+            sql_database = open_database()
+            user_data_config(sql_database)
+
+        if user_input == "e":
             # clean and end programm
             clean_console()
             quit()
 
 
 def cli_menu_return_workreport():
-    text_options = "Enter 'b' to return to main menu\nPress 'e' to exit\nPress 'd' to delete an entry\n"
+    text_options = "Enter 'r' to return to main menu\nPress 'e' to exit\nPress 'd' to delete an entry\n"
     while True:
-        return_to_main_menu = input(text_options)
-        if return_to_main_menu == "b":
-            # clean and return to main menu
+        user_input = input(f"\n{text_options}")
+        if user_input == "r":
             cli_return_to_cli_menu()
             break
-
-        if return_to_main_menu == "d":
-            "In which category?"
-            category = choose_category()
-            print(category)
-            year = YEAR
-            kw = CALENDER_WEEK
-            sql_data = reportrick_database_class.Database(DATABASEPATH)
-            # output all enties
-            format_list_print(sql_data.get_entries_text_by_category_week_year(
-                kw, year, category))
-            entry_text = input("Input the message that you want to delete  ")
-            print(
-                f"Year: {YEAR}, KW:{kw} CATEGORY:{category} entry_txt:{entry_text}")
-            sql_data2 = reportrick_database_class.Database(DATABASEPATH)
-            sql_data2.delete_entry_by_text_category_year_kw(
-                category, year, kw, entry_text)
-            log.debug(f"Entry {entry_text} was deleted")
-            clean_console()
-            cli_week_report()
-        if return_to_main_menu == "e":
+        if user_input == "d":
+            user_delete_entry()
+        if user_input == "e":
             clean_console()
             quit()
 
