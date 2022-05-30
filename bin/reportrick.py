@@ -95,6 +95,31 @@ log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
 
+def cmd_add(args):
+    """
+    Add an entry to the current workreport
+    The given args object contains the Category and the Entry which sould is added to the database.
+    """
+    log.debug("cmd_add 103")
+
+    if args.category in CATEGORY_LIST:
+        date_obj, date_formatted, calender_week = get_time_strings()
+        log.debug(
+            f" {args.category}, {args.entry}, Date2: {date_formatted} CalenderWeekNumber: {calender_week}")
+        # Opens the database and add adds the entry
+        sql_database = reportrick_database_class.Database(DATABASEPATH)
+        sql_database.set_entry_table(
+            args.category, args.entry, calender_week, date_formatted)
+    else:
+        print("Wrong category")
+
+
+def cmd_list(args):
+    """ Output current workr report """
+    print("Hello")
+    log.debug("cmd_list")
+
+
 def parsecli(cliargs=None) -> argparse.Namespace:
     """Parse CLI with :class:`argparse.ArgumentParser` and return parsed result
     :param cliargs: Arguments to parse or None (=use sys.argv)
@@ -118,19 +143,22 @@ def parsecli(cliargs=None) -> argparse.Namespace:
     # Add a new sub command with addiotan arguments "ADD a new entry by category"
     subparsers = parser.add_subparsers(help='Available sub commands')
     parser_add = subparsers.add_parser(
-        "add", help="adds a new entry to your day")
+        "add",  help="adds a new entry to your day")
     parser_add.set_defaults(func=cmd_add)
-    parser_add.add_argument(
-        "category", type=str, help="Choose a Category [red, amber, green, meeting] in which the entry needs to be added")
+    parser_add.add_argument("category", type=str,
+                            help="Choose a Category [red, amber, green, meeting] in which the entry needs to be added")
     parser_add.add_argument(
         "entry", type=str, help="Add a new entry which describes the activity")
 
-    args = parser.parse_args(args=cliargs)
-    # Setup logging and the log level according to the "-v" option
-    dictConfig(DEFAULT_LOGGING_DICT)
-    log.setLevel(LOGLEVELS.get(args.verbose, logging.DEBUG))
+    parser_list = subparsers.add_parser(
+        "list", help="Display current workreport")
+    parser_list.set_defaults(func=cmd_list)
 
-    log.debug("CLI result: %s", args)
+    parser_menu = subparsers.add_parser(
+        "menu", help="Starts the Menu")
+    parser_menu.set_defaults(func=cmd_menu)
+
+    args = parser.parse_args(cliargs)
 
     # help for the user when no subcommand was passed
     if "func" not in args:
@@ -144,25 +172,11 @@ def parsecli(cliargs=None) -> argparse.Namespace:
     dictConfig(DEFAULT_LOGGING_DICT)
     log.setLevel(LOGLEVELS.get(args.verbose, logging.DEBUG))
     log.debug("CLI result: %s", args)
-
     return args
 
 
-def cmd_add(args):
-    """
-    Add an entry to the current workreport
-    The given args object contains the Category and the Entry which sould is added to the database.
-    """
-    if args.category in CATEGORY_LIST:
-        date_obj, date_formatted, calender_week = get_time_strings()
-        log.debug(
-            f" {args.category}, {args.entry}, Date2: {date_formatted} CalenderWeekNumber: {calender_week}")
-        # Opens the database and add adds the entry
-        sql_database = reportrick_database_class.Database(DATABASEPATH)
-        sql_database.set_entry_table(
-            args.category, args.entry, calender_week, date_formatted)
-    else:
-        print("Wrong category")
+def cmd_menu(args):
+    cli_menu()
 
 
 def create_database():
@@ -528,7 +542,9 @@ def main(cliargs=None) -> int:
     """
     # clean_console()
     try:
-        parsecli(cliargs)
+        args = parsecli(cliargs)
+        args.func(args)
+        print(args.func)
         return 0
 
     except MissingSubCommand as error:
