@@ -37,7 +37,7 @@ def generate_html_and_pdf(meeting_list, green_list, amber_list, red_list, team_d
     # create pdf
     weasyprint.HTML(PATH_CREATED_HTML).write_pdf(PATH_CREATED_PDF)
     print(
-        f"File created at:\nHTML: {PATH_CREATED_PDF}\nPDF:  {PATH_CREATED_HTML}\n")
+        f"File created at:\nHTML: {PATH_CREATED_HTML}\nPDF:  {PATH_CREATED_PDF}\n")
 
 
 def generate_html(meeting_list, green_list, amber_list, red_list, team_data, user_data, time_data):
