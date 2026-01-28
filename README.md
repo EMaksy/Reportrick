@@ -11,6 +11,31 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
+## Docker (no local dependencies)
+
+Build the image:
+
+```bash
+docker compose build
+```
+
+Run the interactive menu:
+
+```bash
+docker compose run --rm reportrick
+```
+
+Run CLI commands directly:
+
+```bash
+docker compose run --rm reportrick add GREEN "Shipped onboarding flow"
+docker compose run --rm reportrick list
+```
+
+The database and generated reports are persisted to `database/` and `work_report/` via volumes.
+
+If you hit `Permission denied` on `/app/bin/reportrick.py` (common on SELinux systems), ensure the volumes use the `:Z` label as in `docker-compose.yml`.
+
 Run the interactive menu:
 
 ```bash

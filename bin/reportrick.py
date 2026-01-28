@@ -395,14 +395,36 @@ def user_data_config(sql_database):
 def user_delete_entry():
     "In which category?"
     category = choose_category()
-    print(category)
     year = YEAR
     kw = CALENDER_WEEK
     sql_data = reportrick_database_class.Database(DATABASEPATH)
-    # output all enties
-    format_list_print(sql_data.get_entries_text_by_category_week_year(
+    # output all entries
+    entry_list_raw = list(sql_data.get_entries_text_by_category_week_year(
         kw, year, category))
-    entry_text = input("Input the message that you want to delete  ")
+    entry_list_clean = format_list_and_return(entry_list_raw)
+    if not entry_list_clean:
+        print("No entries found for this category.")
+        cli_menu_return_workreport()
+        return
+
+    for idx, text in enumerate(entry_list_clean, start=1):
+        print(f"{idx}:{text}")
+
+    while True:
+        entry_selector = input(
+            "Enter the number to delete, the exact text, or 'r' to return: ")
+        if entry_selector.lower() in ("r", "e", "q", "exit", "quit"):
+            return
+        if entry_selector.isdigit():
+            index = int(entry_selector) - 1
+            if 0 <= index < len(entry_list_clean):
+                entry_text = entry_list_clean[index]
+                break
+            print("Please enter a valid number from the list.")
+            continue
+        entry_text = entry_selector
+        break
+
     print(
         f"Year: {YEAR}, KW:{kw} CATEGORY:{category} entry_txt:{entry_text}")
     sql_data2 = reportrick_database_class.Database(DATABASEPATH)
@@ -475,10 +497,10 @@ def cli_week_report():
     print(f"Name: {first_name} {last_name}     Team: {team_name}")
     print(f"{bcolors.RED}Red:{bcolors.ENDC}")
     format_list_print(list_red_entries)
-    print(f"{bcolors.GREEN}Green:{bcolors.ENDC}")
-    format_list_print(list_green_entries)
     print(f"{bcolors.YELLOW}Amber:{bcolors.ENDC}")
     format_list_print(list_amber_entries)
+    print(f"{bcolors.GREEN}Green:{bcolors.ENDC}")
+    format_list_print(list_green_entries)
     print(f"{bcolors.OKBLUE}Meetings:{bcolors.ENDC}")
     format_list_print(list_meetings_enries)
     cli_menu_return_workreport()

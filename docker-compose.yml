@@ -1,0 +1,10 @@
+services:
+  reportrick:
+    build: .
+    working_dir: /app
+    volumes:
+      - .:/app:Z
+      - ./database:/app/database:Z
+      - ./work_report:/app/work_report:Z
+    stdin_open: true
+    tty: true
