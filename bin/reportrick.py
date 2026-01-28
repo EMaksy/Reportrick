@@ -7,8 +7,6 @@ from datetime import date
 import time
 import os
 
-from MySQLdb import DATE
-from pyparsing import And
 import reportrick_database_class
 import reportrick_generate
 
@@ -16,10 +14,9 @@ import reportrick_generate
 __version__ = "0.1.0"
 __author__ = "Eugen Maksymenko <eugen.maksymenko@gmx.net>"
 # relative dir for the database
-relative_path_to_project = (f"{os.path.dirname(__file__)}/..")
-file_dir_database = "/database"
-relative_file = "/reportrick_database.sqlite"
-DATABASEPATH = relative_path_to_project + file_dir_database + relative_file
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+DATABASE_DIR = os.path.join(PROJECT_ROOT, "database")
+DATABASEPATH = os.path.join(DATABASE_DIR, "reportrick_database.sqlite")
 # DATE
 YEAR = str(date.today().year)
 CALENDER_WEEK = str(datetime.date.today().isocalendar()[1])
@@ -189,12 +186,11 @@ def create_database():
 
 def create_database_dir():
     """Create a relative directory for the reportrick database"""
-    # log.debug(DATABASEPATH)
     try:
-        os.mkdir(f"../{file_dir_database}")
-        log.debug(f"Directory  created at{DATABASEPATH}")
+        os.makedirs(DATABASE_DIR, exist_ok=True)
+        log.debug(f"Directory created at {DATABASE_DIR}")
     except:
-        log.error(f"Path {DATABASEPATH} was not created")
+        log.error(f"Path {DATABASE_DIR} was not created")
 
 
 def get_time_strings():
@@ -558,9 +554,20 @@ def choose_category():
         print(f"{category_counter}:{CATEGORY_LIST[category_counter-1]} ")
         category_counter += 1
 
-    category_selector = input(
-        f"Choose an option between 1 to {category_counter-1} ")
-    return CATEGORY_LIST[int(category_selector)-1]
+    while True:
+        category_selector = input(
+            f"Choose an option between 1 to {category_counter-1} (or 'e' to exit) ")
+        if category_selector.lower() in ("e", "exit", "q", "quit"):
+            clean_console()
+            quit()
+        if not category_selector.isdigit():
+            print("Please enter a number from the list.")
+            continue
+        index = int(category_selector) - 1
+        if index < 0 or index >= len(CATEGORY_LIST):
+            print("Please enter a valid option from the list.")
+            continue
+        return CATEGORY_LIST[index]
 
 
 def cli_add_entry():
@@ -596,7 +603,6 @@ def main(cliargs=None) -> int:
     try:
         args = parsecli(cliargs)
         args.func(args)
-        print(args.func)
         return 0
 
     except MissingSubCommand as error:

@@ -1,3 +1,4 @@
+import os
 import sqlite3
 import string
 import reportrick
@@ -21,6 +22,7 @@ class Database():
         """
         reportrick.log.debug(f"{self.path}")
         try:
+            os.makedirs(os.path.dirname(self.path), exist_ok=True)
             self.connection = sqlite3.connect(f"{self.path}")
             reportrick.log.debug("Connection to database true")
         except:
